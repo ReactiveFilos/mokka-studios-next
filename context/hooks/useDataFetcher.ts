@@ -18,7 +18,7 @@ export const useDataFetcher = <T extends { length?: number }>(fetcher: FetcherFu
 
     if (error) {
       setData([]);
-      setIsEmpty(false);
+      setIsEmpty(true);
       setError(error);
       setLoading(false);
     } else if (data && data.length > 0) {

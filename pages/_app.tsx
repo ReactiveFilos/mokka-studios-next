@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import { NextThemeProvider } from "@/layout/NextThemeProvider";
-import SideBarRootLayout from "@/layout/SideBarRootLayout";
+import SafeProfileLayout from "@/layout/SafeProfileLayout";
 
 import AuthProvider from "@/context/auth";
 import CacheProvider from "@/context/caching";
@@ -63,15 +63,15 @@ export default function App({
         disableTransitionOnChange>
         <ThemeProvider>
           <ToastProvider>
-            <CacheProvider>
-              <AuthProvider>
+            <AuthProvider>
+              <CacheProvider>
                 <Provider previousRoute={previousRoute}>
-                  <SideBarRootLayout>
+                  <SafeProfileLayout>
                     {getLayout(<Component {...pageProps} />)}
-                  </SideBarRootLayout>
+                  </SafeProfileLayout>
                 </Provider>
-              </AuthProvider>
-            </CacheProvider>
+              </CacheProvider>
+            </AuthProvider>
           </ToastProvider>
         </ThemeProvider>
       </NextThemeProvider>

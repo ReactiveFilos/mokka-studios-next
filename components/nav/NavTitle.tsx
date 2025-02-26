@@ -5,20 +5,20 @@ import { useMemo } from "react";
 import AppText from "@/components/app/AppText";
 
 export default function NavTitle() {
-    const router = useRouter();
+  const router = useRouter();
 
-    const ROUTE_TITLES: Record<string, string> = {
-        "/": "Home",
-        "/account": "Account",
-    } as const;
+  const ROUTE_TITLES: Record<string, string> = {
+    "/": "Home",
+    "/account": "Account",
+  } as const;
 
-    const memoizedTitle = useMemo(() => {
-        return (
-            <AppText size="headingSmall" weight="lightBold" unbreakable>
-                {ROUTE_TITLES[router.pathname] || "Next.js"}
-            </AppText>
-        );
-    }, [router.pathname]);
+  const memoizedTitle = useMemo(() => {
+    return (
+      <AppText size="headingSmall" weight="lightBold" unbreakable>
+        {ROUTE_TITLES[router.pathname] || ""}
+      </AppText>
+    );
+  }, [router.pathname]);
 
-    return memoizedTitle;
+  return memoizedTitle;
 }

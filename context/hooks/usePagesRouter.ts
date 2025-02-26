@@ -9,5 +9,9 @@ export const usePagesRouter = () => {
     router.push("/account");
   }, [router]);
 
-  return { pagesRouter: { account } };
+  const login = useCallback(() => {
+    router.push("/login");
+  }, [router]);
+
+  return { pagesRouter: { account, login } };
 };
