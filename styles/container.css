@@ -1,0 +1,45 @@
+.Container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0rem 2rem;
+}
+
+@media (min-width: 575px) {
+  .Container {
+    max-width: 575px
+  }
+}
+
+@media (min-width: 768px) {
+  .Container {
+    max-width: 768px
+  }
+}
+
+@media (min-width: 1024px) {
+  .Container {
+    max-width: 1024px
+  }
+}
+
+/* @media (min-width: 1320px) {
+  .Container {
+    max-width: 1320px;
+  }
+} */
+
+.ShowOnMobile {
+  display: none;
+}
+
+@media screen and (max-width: 545px) {
+
+  .HideOnMobile {
+    display: none;
+  }
+
+  .ShowOnMobile {
+    display: block;
+  }
+}
