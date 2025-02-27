@@ -1,8 +1,8 @@
 import { useAuth } from "@/context/auth";
 
 export default function SafeProfileLayout({ children }: { children: React.ReactNode }) {
-  const { loadingProfile } = useAuth();
+  const { isInitialViewReady } = useAuth();
 
-  if (loadingProfile) return <></>;
+  if (isInitialViewReady === false) return <></>;
   return <>{children}</>;
 }

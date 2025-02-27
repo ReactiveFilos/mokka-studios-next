@@ -1,13 +1,21 @@
 import { useRouter } from "next/router";
 
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import { useUserProfile } from "@/context/hooks/fetch/useUserProfile";
 import { usePagesRouter } from "@/context/hooks/usePagesRouter";
+import { Profile } from "@/context/types/profile.type";
+import { SetState } from "@/context/types/type";
 
 type ContextProps = {
-  profile: any;
+  isInitialViewReady: boolean;
+
+  profile: Profile | null;
+  setProfile: SetState<Profile | null>;
+
   isEmptyProfile: boolean;
+  setIsEmptyProfile: SetState<boolean>;
+
   loadingProfile: boolean;
 
 };
@@ -20,6 +28,8 @@ const Context = createContext({} as ContextProps) as React.Context<ContextProps>
 
 const AuthProvider = ({ children }: ProviderProps) => {
   const { pathname } = useRouter();
+  const [isInitialViewReady, setIsInitialViewReady] = useState<boolean>(false);
+
   const { pagesRouter } = usePagesRouter();
 
   const {
@@ -28,7 +38,6 @@ const AuthProvider = ({ children }: ProviderProps) => {
     isEmptyProfile,
     setIsEmptyProfile,
     loadingProfile,
-    setLoadingProfile,
     getUserProfile,
   } = useUserProfile();
 
@@ -37,20 +46,39 @@ const AuthProvider = ({ children }: ProviderProps) => {
   }, [loadingProfile]);
 
   useEffect(() => {
-    console.log("profile", profile);
-  }, [profile]);
+    if (profile && isEmptyProfile === false) {
+      if (pathname === "/login" || pathname === "/signup") {
+        pagesRouter.index();
+      }
+    }
+  }, [profile, isEmptyProfile, pathname]);
 
   useEffect(() => {
-    if (loadingProfile === false && isEmptyProfile === true && pathname !== "/login" && pathname !== "/signup") {
+    // Case 1: not loading, profile exists, not on login or signup
+    if (loadingProfile === false && isEmptyProfile === false && pathname !== "/login" && pathname !== "/signup") {
+      setIsInitialViewReady(true);
+    }
+    // Case 2: not loading, empty profile, not on login or signup
+    else if (loadingProfile === false && isEmptyProfile === true && pathname !== "/login" && pathname !== "/signup") {
       pagesRouter.login();
+    }
+    // Case 3: not loading, empty profile, on login or signup
+    if (loadingProfile === false && isEmptyProfile === true && pathname === "/login" || pathname === "/signup") {
+      setIsInitialViewReady(true);
     }
   }, [loadingProfile, isEmptyProfile, pathname]);
 
   const contextValues: ContextProps = useMemo(() => ({
+    isInitialViewReady,
+
     profile,
+    setProfile,
     isEmptyProfile,
+    setIsEmptyProfile,
     loadingProfile,
   }), [
+    isInitialViewReady,
+
     profile,
     isEmptyProfile,
     loadingProfile,

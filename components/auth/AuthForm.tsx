@@ -22,7 +22,7 @@ export default function AuthForm({ view }: { view: View }) {
           <CardTitle className="text-2xl">{view === "login" ? "Login" : "Sign up"}</CardTitle>
           <CardDescription>
             {view === "login"
-              ? "Enter your email below to login to your account"
+              ? "Enter your details below to login"
               : "Enter your details below to create an account"}
           </CardDescription>
         </CardHeader>

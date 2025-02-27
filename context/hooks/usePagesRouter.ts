@@ -5,13 +5,17 @@ import { useCallback } from "react";
 export const usePagesRouter = () => {
   const router = useRouter();
 
-  const account = useCallback(() => {
-    router.push("/account");
-  }, [router]);
-
   const login = useCallback(() => {
     router.push("/login");
   }, [router]);
 
-  return { pagesRouter: { account, login } };
+  const index = useCallback(() => {
+    router.push("/");
+  }, [router]);
+
+  const account = useCallback(() => {
+    router.push("/account");
+  }, [router]);
+
+  return { pagesRouter: { login, index, account } };
 };

@@ -19,16 +19,15 @@ export const useUserProfile = () => {
 
   const fetcher = useCallback(getUserProfile, []);
   const {
-    data, setData, isEmpty, setIsEmpty, loading, setLoading, fetchData
+    data, setData, isEmpty, setIsEmpty, loading, fetchData
   } = useDataFetcher<any>(fetcher);
 
   return {
-    profile: data ? data[0] : null,
+    profile: data,
     setProfile: setData,
     isEmptyProfile: isEmpty,
     setIsEmptyProfile: setIsEmpty,
     loadingProfile: loading,
-    setLoadingProfile: setLoading,
     getUserProfile: fetchData,
   };
 };

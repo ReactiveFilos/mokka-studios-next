@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useMemo } from "react";
 
 type ContextProps = {
   previousRoute: string;
@@ -13,10 +13,6 @@ type ProviderProps = {
 const Context = createContext({} as ContextProps) as React.Context<ContextProps>;
 
 const Provider = ({ children, previousRoute }: ProviderProps) => {
-
-  useEffect(() => {
-    console.log("Hello");
-  }, []);
 
   const contextValues: ContextProps = useMemo(() => ({
     previousRoute,

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import { NextThemeProvider } from "@/layout/NextThemeProvider";
+import SafeProfileLayout from "@/layout/SafeProfileLayout";
 
 import AuthProvider from "@/context/auth";
 import ThemeProvider from "@/context/theme";
@@ -62,9 +63,11 @@ export default function App({
         <ThemeProvider>
           <ToastProvider>
             <AuthProvider>
-              <Provider previousRoute={previousRoute}>
-                {getLayout(<Component {...pageProps} />)}
-              </Provider>
+              <SafeProfileLayout>
+                <Provider previousRoute={previousRoute}>
+                  {getLayout(<Component {...pageProps} />)}
+                </Provider>
+              </SafeProfileLayout>
             </AuthProvider>
           </ToastProvider>
         </ThemeProvider>

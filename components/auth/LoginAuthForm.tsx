@@ -2,8 +2,11 @@ import Link from "next/link";
 
 import { useForm } from "react-hook-form";
 
+import { useAuth } from "@/context/auth";
+import { useUserAuth } from "@/context/hooks/fetch/useUserAuth";
+
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormRootError } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,10 +33,18 @@ export default function LoginAuthForm() {
     },
   });
 
-  function onSubmit(values: FormSchema) {
-    console.log(values);
+  const { setProfile, setIsEmptyProfile } = useAuth();
+  const { signInWithEmailPassword } = useUserAuth();
 
-
+  async function onSubmit(values: FormSchema) {
+    const { email, password } = values;
+    const { data, error } = await signInWithEmailPassword({ email, password });
+    if (data) {
+      setProfile(data);
+      setIsEmptyProfile(false);
+    } else if (error) {
+      form.setError("root", { message: error });
+    }
   }
 
   return (
@@ -72,6 +83,7 @@ export default function LoginAuthForm() {
             </FormItem>
           )}
         />
+        <FormRootError />
         <Button type="submit" className="w-full">
           Login
         </Button>

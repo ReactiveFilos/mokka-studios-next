@@ -1,4 +1,5 @@
 export type Profile = {
   id: string;
-  fullname: string | null;
+  fullname: string;
+  email: string;
 };

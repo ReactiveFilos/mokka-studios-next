@@ -10,7 +10,7 @@ export const useDataFetcher = <T extends { length?: number }>(fetcher: FetcherFu
 
   const fetchData = useCallback(async () => {
     setData([]);
-    setIsEmpty(false);
+    setIsEmpty(null);
     setError(null);
     setLoading(true);
 
