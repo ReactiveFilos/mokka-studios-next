@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+
 import { createContext, useContext, useEffect, useMemo } from "react";
 
 import { useUserProfile } from "@/context/hooks/fetch/useUserProfile";
@@ -17,6 +19,7 @@ type ProviderProps = {
 const Context = createContext({} as ContextProps) as React.Context<ContextProps>;
 
 const AuthProvider = ({ children }: ProviderProps) => {
+  const { pathname } = useRouter();
   const { pagesRouter } = usePagesRouter();
 
   const {
@@ -34,10 +37,14 @@ const AuthProvider = ({ children }: ProviderProps) => {
   }, [loadingProfile]);
 
   useEffect(() => {
-    if (loadingProfile === false && isEmptyProfile === true) {
+    console.log("profile", profile);
+  }, [profile]);
+
+  useEffect(() => {
+    if (loadingProfile === false && isEmptyProfile === true && pathname !== "/login" && pathname !== "/signup") {
       pagesRouter.login();
     }
-  }, [loadingProfile, isEmptyProfile]);
+  }, [loadingProfile, isEmptyProfile, pathname]);
 
   const contextValues: ContextProps = useMemo(() => ({
     profile,
