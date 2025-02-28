@@ -1,3 +1,4 @@
+import { useUserAuth } from "@/context/hooks/fetch/useUserAuth";
 import { usePagesRouter } from "@/context/hooks/usePagesRouter";
 import { Profile } from "@/context/types/profile.type";
 
@@ -30,6 +31,7 @@ export function NavProfile({
   const { isMobile } = useSidebar();
 
   const { pagesRouter } = usePagesRouter();
+  const { signOut } = useUserAuth();
 
   const initial = profile.fullname.slice(0, 1).toUpperCase();
 
@@ -65,25 +67,13 @@ export function NavProfile({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <AppIcon name="sparkles" size="1.65rem" />
-                <AppText size="small">Upgrade to Pro</AppText>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
               <DropdownMenuItem onClick={pagesRouter.account}>
                 <AppIcon name="badge-check" size="1.65rem" />
                 <AppText size="small">Account</AppText>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <AppIcon name="credit-card" size="1.65rem" />
-                <AppText size="small">Billing</AppText>
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            {/* Log out function */}
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={signOut}>
               <AppIcon name="log-out" size="1.65rem" />
               <AppText size="small">Log out</AppText>
             </DropdownMenuItem>

@@ -7,18 +7,23 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
 const formSchema = z.object({
-  fullname: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  fullname: z.string()
+    .min(2, { message: "Username must be at least 2 characters." })
+    .max(50, { message: "Username must be less than 25 characters." }),
   email: z.string().email({
     message: "Invalid email address.",
   }),
-  password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
-  }),
+  password: z.string()
+    .min(6, { message: "Password must be at least 6 characters." })
+    .max(50, { message: "Password must be less than 50 characters." })
+    // Regex for one upper case, one number, one special (@$!%*?&)
+    .regex(/(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/, {
+      message: "Password must contain at least one uppercase letter, one number and one special character (@$!%*?&)",
+    }),
 });
 
 export default function SignUpAuthForm() {
@@ -33,10 +38,6 @@ export default function SignUpAuthForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-  }
-
-  function onError(error: z.ZodError) {
-
   }
 
   return (
@@ -82,7 +83,7 @@ export default function SignUpAuthForm() {
           )}
         />
         <Button type="submit" className="w-full">
-          Continue
+          {form.formState.isSubmitting ? <Loader2 className="animate-spin" /> : "Continue"}
         </Button>
         <div className="mt-4 text-center text-sm">
           Already have an account?{" "}

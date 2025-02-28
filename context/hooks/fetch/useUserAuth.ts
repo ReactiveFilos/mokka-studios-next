@@ -1,3 +1,5 @@
+import { useAuth } from "@/context/auth";
+import { useCache } from "@/context/caching";
 import { Profile } from "@/context/types/profile.type";
 
 import axiosInstance from "@/lib/axiosInstance";
@@ -17,6 +19,8 @@ type AuthResult = {
 }
 
 export const useUserAuth = () => {
+  const { setIsEmptyProfile } = useAuth();
+  const { clearStoredUserProfile } = useCache();
 
   async function signInWithEmailPassword({ email, password }: SignInProps): Promise<AuthResult> {
     try {
@@ -35,8 +39,14 @@ export const useUserAuth = () => {
 
   }
 
+  async function signOut() {
+    setIsEmptyProfile(true);
+    clearStoredUserProfile();
+  }
+
   return {
     signInWithEmailPassword,
     signUpWithEmailPassword,
+    signOut
   };
 };

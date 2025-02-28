@@ -11,6 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormRoo
 import { Input } from "@/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
 const formSchema = z.object({
@@ -88,7 +89,7 @@ export default function LoginAuthForm() {
         />
         <FormRootError />
         <Button type="submit" className="w-full">
-          Login
+          {form.formState.isSubmitting ? <Loader2 className="animate-spin" /> : "Login"}
         </Button>
         <div className="mt-4 text-center text-sm">
           Don&apos;t have an account?{" "}

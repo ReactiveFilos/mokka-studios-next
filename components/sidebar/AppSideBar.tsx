@@ -7,10 +7,9 @@ import { usePagesRouter } from "@/context/hooks/usePagesRouter";
 
 import AppIcon from "@/components/app/AppIcon";
 import AppText from "@/components/app/AppText";
+import { NavProfile } from "@/components/profile/NavProfile";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenuButton } from "@/components/ui/sidebar";
-
-import { NavProfile } from "../profile/NavProfile";
 
 export function AppSidebar() {
   const { pathname } = useRouter();

@@ -78,7 +78,7 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
   return (
     <ToastContext.Provider value={contextValues}>
       <Toaster
-        position="bottom-right"
+        position="top-center"
         reverseOrder={false}
         toastOptions={{
           style: styleToast
