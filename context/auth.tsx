@@ -24,6 +24,9 @@ type ProviderProps = {
   children: React.ReactNode;
 };
 
+const AUTH_ROUTE = ["/login", "/signup", "/reset"];
+type AuthRoute = typeof AUTH_ROUTE[number];
+
 const Context = createContext({} as ContextProps) as React.Context<ContextProps>;
 
 const AuthProvider = ({ children }: ProviderProps) => {
@@ -45,28 +48,27 @@ const AuthProvider = ({ children }: ProviderProps) => {
     if (loadingProfile === true) getUserProfile();
   }, [loadingProfile]);
 
-  useEffect(() => {
-    if (profile && isEmptyProfile === false) {
-      if (pathname === "/login" || pathname === "/signup") {
-        pagesRouter.index();
-      }
-    }
-  }, [profile, isEmptyProfile, pathname]);
+  const isAuthRoute = useMemo(() => AUTH_ROUTE.includes(pathname as AuthRoute), [pathname]);
 
   useEffect(() => {
-    // Case 1: not loading, profile exists, not on login or signup
-    if (loadingProfile === false && isEmptyProfile === false && pathname !== "/login" && pathname !== "/signup") {
+    if (loadingProfile) return;
+
+    if (profile && isEmptyProfile === false && isAuthRoute) {
+      pagesRouter.index();
+      return;
+    }
+    if (profile && isEmptyProfile === false && isAuthRoute === false) {
       setIsInitialViewReady(true);
     }
-    // Case 2: not loading, empty profile, not on login or signup
-    else if (loadingProfile === false && isEmptyProfile === true && pathname !== "/login" && pathname !== "/signup") {
+
+    if (isEmptyProfile && isAuthRoute === false) {
       pagesRouter.login();
+      return;
     }
-    // Case 3: not loading, empty profile, on login or signup
-    if (loadingProfile === false && isEmptyProfile === true && pathname === "/login" || pathname === "/signup") {
+    if (isEmptyProfile && isAuthRoute) {
       setIsInitialViewReady(true);
     }
-  }, [loadingProfile, isEmptyProfile, pathname]);
+  }, [profile, isEmptyProfile, loadingProfile, isAuthRoute]);
 
   const contextValues: ContextProps = useMemo(() => ({
     isInitialViewReady,

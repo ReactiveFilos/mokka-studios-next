@@ -1,8 +1,12 @@
 import Link from "next/link";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { useUserAuth } from "@/context/hooks/fetch/useUserAuth";
+
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
@@ -26,6 +30,8 @@ const formSchema = z.object({
     }),
 });
 
+type FormSchema = z.infer<typeof formSchema>;
+
 export default function SignUpAuthForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,9 +42,15 @@ export default function SignUpAuthForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const { signUpWithEmailPassword } = useUserAuth();
+
+  async function onSubmit(values: FormSchema) {
+    const { email, password, fullname } = values;
+    await signUpWithEmailPassword({ email, password, fullname });
   }
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+  const togglePasswordVisibility = () => setIsPasswordVisible((prev) => !prev);
 
   return (
     <Form {...form}>
@@ -76,14 +88,20 @@ export default function SignUpAuthForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input type={isPasswordVisible ? "text" : "password"} {...field} />
               </FormControl>
               <FormMessage />
+              <div className="flex items-center gap-3">
+                <Checkbox checked={isPasswordVisible} onCheckedChange={togglePasswordVisibility} />
+                <button type="button" className="text-sm cursor-pointer" onClick={togglePasswordVisibility}>Show password</button>
+              </div>
             </FormItem>
           )}
         />
         <Button type="submit" className="w-full">
-          {form.formState.isSubmitting ? <Loader2 className="animate-spin" /> : "Continue"}
+          {(form.formState.isSubmitting || form.formState.isSubmitted) && form.formState.isSubmitSuccessful ?
+            <Loader2 className="animate-spin" /> : "Continue"
+          }
         </Button>
         <div className="mt-4 text-center text-sm">
           Already have an account?{" "}

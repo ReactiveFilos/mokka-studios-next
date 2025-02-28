@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useAuth } from "@/context/auth";
@@ -7,6 +8,7 @@ import { useCache } from "@/context/caching";
 import { useUserAuth } from "@/context/hooks/fetch/useUserAuth";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormRootError } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
@@ -36,8 +38,8 @@ export default function LoginAuthForm() {
   });
 
   const { setStoredUserProfile } = useCache();
-  const { setProfile, setIsEmptyProfile } = useAuth();
   const { signInWithEmailPassword } = useUserAuth();
+  const { setProfile, setIsEmptyProfile } = useAuth();
 
   async function onSubmit(values: FormSchema) {
     const { email, password } = values;
@@ -50,6 +52,9 @@ export default function LoginAuthForm() {
       form.setError("root", { message: error });
     }
   }
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
+  const togglePasswordVisibility = () => setIsPasswordVisible((prev) => !prev);
 
   return (
     <Form {...form}>
@@ -74,22 +79,26 @@ export default function LoginAuthForm() {
             <FormItem>
               <div className="flex items-center">
                 <FormLabel>Password</FormLabel>
-                <a
-                  href="#"
-                  className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                <Link href="reset" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
                   Forgot your password?
-                </a>
+                </Link>
               </div>
               <FormControl>
-                <Input {...field} />
+                <Input type={isPasswordVisible ? "text" : "password"} {...field} />
               </FormControl>
               <FormMessage />
+              <div className="flex items-center gap-3">
+                <Checkbox checked={isPasswordVisible} onCheckedChange={togglePasswordVisibility} />
+                <button type="button" className="text-sm cursor-pointer" onClick={togglePasswordVisibility}>Show password</button>
+              </div>
             </FormItem>
           )}
         />
         <FormRootError />
         <Button type="submit" className="w-full">
-          {form.formState.isSubmitting ? <Loader2 className="animate-spin" /> : "Login"}
+          {(form.formState.isSubmitting || form.formState.isSubmitted) && form.formState.isSubmitSuccessful ?
+            <Loader2 className="animate-spin" /> : "Login"
+          }
         </Button>
         <div className="mt-4 text-center text-sm">
           Don&apos;t have an account?{" "}

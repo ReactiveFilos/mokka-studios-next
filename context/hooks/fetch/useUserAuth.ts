@@ -19,8 +19,8 @@ type AuthResult = {
 }
 
 export const useUserAuth = () => {
-  const { setIsEmptyProfile } = useAuth();
-  const { clearStoredUserProfile } = useCache();
+  const { setProfile, setIsEmptyProfile } = useAuth();
+  const { setStoredUserProfile, clearStoredUserProfile } = useCache();
 
   async function signInWithEmailPassword({ email, password }: SignInProps): Promise<AuthResult> {
     try {
@@ -35,8 +35,9 @@ export const useUserAuth = () => {
   }
 
   async function signUpWithEmailPassword({ email, password, fullname }: SignUpProps) {
-
-
+    await setStoredUserProfile({ id: 1, email, fullname });
+    setProfile({ id: 1, email, fullname });
+    setIsEmptyProfile(false);
   }
 
   async function signOut() {
