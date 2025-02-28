@@ -1,0 +1,11 @@
+.navBar {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 10;
+
+  padding: 1rem 1.375rem 0.75rem;
+  gap: 1.25rem;
+}

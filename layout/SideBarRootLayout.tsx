@@ -1,4 +1,3 @@
-import AppDiv from "@/components/app/AppDiv";
 import NavBar from "@/components/nav/NavBar";
 import { AppSidebar } from "@/components/sidebar/AppSideBar";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -23,16 +22,7 @@ export default function SideBarRootLayout({ children }: LayoutProps) {
             position: "relative",
             minHeight: "100vh",
           }}>
-          <AppDiv
-            width100
-            className="width100 flexRowSpaceBetTop"
-            style={{
-              backgroundColor: "transparent",
-              position: "sticky",
-              top: 0,
-            }}>
-            <NavBar />
-          </AppDiv>
+          <NavBar />
           <div
             className="width100"
             style={{
