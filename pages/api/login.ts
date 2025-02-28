@@ -10,7 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (email === process.env.NEXT_PUBLIC_MOCK_API_EMAIL &&
       password === process.env.NEXT_PUBLIC_MOCK_API_PASSWORD) {
 
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/c/871c-e586-488b-9366`, { email, password });
+      const MOCK_API_ID = "/c/b45e-20de-45bc-b4c9";
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${MOCK_API_ID}`, { email, password });
 
       res.status(200).json(response.data);
     } else {

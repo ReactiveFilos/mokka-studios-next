@@ -2,15 +2,12 @@ import { useRouter } from "next/router";
 
 import { useMemo } from "react";
 
+import { ROUTE_TITLES } from "@/context/routes";
+
 import AppText from "@/components/app/AppText";
 
 export default function NavTitle() {
   const { pathname } = useRouter();
-
-  const ROUTE_TITLES: Record<string, string> = {
-    "/": "Home",
-    "/account": "Account",
-  } as const;
 
   const memoizedTitle = useMemo(() => {
     return (

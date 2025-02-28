@@ -1,3 +1,5 @@
+import { useTheme as useNextTheme } from "next-themes";
+
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 import localforage from "localforage";
@@ -17,6 +19,7 @@ type ProviderProps = {
 const Context = createContext({} as ContextProps) as React.Context<ContextProps>;
 
 const ThemeProvider = ({ children }: ProviderProps) => {
+  const { setTheme } = useNextTheme();
 
   const themeStorage: LocalForage = localforage.createInstance({
     name: "themeNext",
@@ -39,6 +42,7 @@ const ThemeProvider = ({ children }: ProviderProps) => {
   }, []);
 
   useEffect(() => {
+    setTheme(selectedColorScheme);
     const body = document.querySelector("body");
     if (body) {
       if (selectedColorScheme === "dark") {
