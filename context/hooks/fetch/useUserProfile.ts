@@ -1,26 +1,23 @@
 import { useCallback } from "react";
 
-import { useDataFetcher } from "@/context/hooks/useDataFetcher";
-
-import axiosInstance from "@/lib/axiosInstance";
+import { useCache } from "@/context/caching";
+import { useDataFetcherSingle } from "@/context/hooks/useDataFetcherSingle";
+import { Profile } from "@/context/types/profile.type";
 
 export const useUserProfile = () => {
 
-  async function getUserProfile() {
-    try {
-      const res = await axiosInstance.get("/api/profile");
-      if (res.status === 200 && res.data) {
-        return res.data;
-      }
-    } catch (error) {
-      return { data: null, error: "Authentication failed" };
-    }
+  const { getStoredUserProfile } = useCache();
+
+  async function getUserProfile(): Promise<{ data: Profile | null, error: string | null }> {
+    const profile = await getStoredUserProfile();
+    if (profile) return { data: profile, error: null };
+    return { data: null, error: "Profile not found" };
   }
 
   const fetcher = useCallback(getUserProfile, []);
   const {
     data, setData, isEmpty, setIsEmpty, loading, fetchData
-  } = useDataFetcher<any>(fetcher);
+  } = useDataFetcherSingle<Profile>(fetcher);
 
   return {
     profile: data,

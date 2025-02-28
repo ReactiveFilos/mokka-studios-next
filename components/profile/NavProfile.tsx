@@ -3,11 +3,7 @@ import { Profile } from "@/context/types/profile.type";
 
 import AppIcon from "@/components/app/AppIcon";
 import AppText from "@/components/app/AppText";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,7 +31,7 @@ export function NavProfile({
 
   const { pagesRouter } = usePagesRouter();
 
-  const initials = profile.fullName.slice(0, 2).toUpperCase();
+  const initial = profile.fullname.slice(0, 1).toUpperCase();
 
   return (
     <SidebarMenu>
@@ -47,10 +43,9 @@ export function NavProfile({
               className="width100 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               style={{ gap: "0.78125rem" }}>
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={profile.avatar} alt={initials} />
-                <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+                <AvatarFallback className="rounded-lg">{initial}</AvatarFallback>
               </Avatar>
-              <AppText size="mid" weight="lightBold">{profile.fullName}</AppText>
+              <AppText size="mid" weight="lightBold">{profile.fullname}</AppText>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -63,10 +58,9 @@ export function NavProfile({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={profile.avatar} alt={initials} />
-                  <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">{initial}</AvatarFallback>
                 </Avatar>
-                <AppText size="mid" weight="lightBold">{profile.fullName}</AppText>
+                <AppText size="mid" weight="lightBold">{profile.fullname}</AppText>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

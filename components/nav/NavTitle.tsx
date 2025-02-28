@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import AppText from "@/components/app/AppText";
 
 export default function NavTitle() {
-  const router = useRouter();
+  const { pathname } = useRouter();
 
   const ROUTE_TITLES: Record<string, string> = {
     "/": "Home",
@@ -15,10 +15,10 @@ export default function NavTitle() {
   const memoizedTitle = useMemo(() => {
     return (
       <AppText size="headingSmall" weight="lightBold" unbreakable>
-        {ROUTE_TITLES[router.pathname] || ""}
+        {ROUTE_TITLES[pathname] || ""}
       </AppText>
     );
-  }, [router.pathname]);
+  }, [pathname]);
 
   return memoizedTitle;
 }

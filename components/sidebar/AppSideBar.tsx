@@ -1,8 +1,9 @@
 import { useRouter } from "next/router";
 
-import { useCallback } from "react";
-
 import SafeProfileLayout from "@/layout/SafeProfileLayout";
+
+import { useAuth } from "@/context/auth";
+import { usePagesRouter } from "@/context/hooks/usePagesRouter";
 
 import AppIcon from "@/components/app/AppIcon";
 import AppText from "@/components/app/AppText";
@@ -12,14 +13,10 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenuButto
 import { NavProfile } from "../profile/NavProfile";
 
 export function AppSidebar() {
-  const router = useRouter();
+  const { pathname } = useRouter();
+  const { pagesRouter } = usePagesRouter();
 
-  const handleHomeRedirect = useCallback(() => {
-    if (router.pathname !== "/") {
-      router.push("/");
-
-    }
-  }, [router]);
+  const { profile } = useAuth();
 
   return (
     <Sidebar>
@@ -34,8 +31,8 @@ export function AppSidebar() {
             size="lg"
             className="width100 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             style={{ gap: "0.78125rem" }}
-            onClick={handleHomeRedirect}
-            isActive={router.pathname === "/"}>
+            onClick={pagesRouter.index}
+            isActive={pathname === "/"}>
             <Avatar className="h-8 w-8 rounded-lg">
               <AvatarFallback className="rounded-lg"><AppIcon name="house" size="1.05rem" /></AvatarFallback>
             </Avatar>
@@ -45,13 +42,7 @@ export function AppSidebar() {
         <SidebarContent style={{ marginTop: "3.5rem" }} />
         <SidebarFooter className="width100">
           <NavProfile
-            profile={{
-              id: "1",
-              fullName: "Filippo Leone",
-              avatar: null,
-              billingAddress: null,
-              paymentMethod: null,
-            }}
+            profile={profile}
           />
         </SidebarFooter>
       </SafeProfileLayout>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 
 import { useAuth } from "@/context/auth";
+import { useCache } from "@/context/caching";
 import { useUserAuth } from "@/context/hooks/fetch/useUserAuth";
 
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,7 @@ export default function LoginAuthForm() {
     },
   });
 
+  const { setStoredUserProfile } = useCache();
   const { setProfile, setIsEmptyProfile } = useAuth();
   const { signInWithEmailPassword } = useUserAuth();
 
@@ -40,6 +42,7 @@ export default function LoginAuthForm() {
     const { email, password } = values;
     const { data, error } = await signInWithEmailPassword({ email, password });
     if (data) {
+      setStoredUserProfile(data);
       setProfile(data);
       setIsEmptyProfile(false);
     } else if (error) {

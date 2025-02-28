@@ -9,6 +9,7 @@ import { NextThemeProvider } from "@/layout/NextThemeProvider";
 import SafeProfileLayout from "@/layout/SafeProfileLayout";
 
 import AuthProvider from "@/context/auth";
+import CacheProvider from "@/context/caching";
 import ThemeProvider from "@/context/theme";
 import ToastProvider from "@/context/toast";
 import Provider from "@/context/user";
@@ -62,13 +63,15 @@ export default function App({
         disableTransitionOnChange>
         <ThemeProvider>
           <ToastProvider>
-            <AuthProvider>
-              <SafeProfileLayout>
-                <Provider previousRoute={previousRoute}>
-                  {getLayout(<Component {...pageProps} />)}
-                </Provider>
-              </SafeProfileLayout>
-            </AuthProvider>
+            <CacheProvider>
+              <AuthProvider>
+                <SafeProfileLayout>
+                  <Provider previousRoute={previousRoute}>
+                    {getLayout(<Component {...pageProps} />)}
+                  </Provider>
+                </SafeProfileLayout>
+              </AuthProvider>
+            </CacheProvider>
           </ToastProvider>
         </ThemeProvider>
       </NextThemeProvider>
