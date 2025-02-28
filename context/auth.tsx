@@ -47,7 +47,7 @@ const AuthProvider = ({ children }: ProviderProps) => {
   } = useUserProfile();
 
   useEffect(() => {
-    if (loadingProfile === true) getUserProfile();
+    if (loadingProfile) getUserProfile();
   }, [loadingProfile]);
 
   const isAuthRoute = useMemo(() => AUTH_ROUTE.includes(pathname as AuthRoute), [pathname]);

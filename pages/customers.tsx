@@ -1,36 +1,15 @@
+import { useEffect, useMemo } from "react";
+
 import SideBarRootLayout from "@/layout/SideBarRootLayout";
 
+import { usePlatform } from "@/context/platform";
+import { Customer } from "@/context/types/customer.type";
+
 import AppDiv from "@/components/app/AppDiv";
+import AppText from "@/components/app/AppText";
 
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-
-type Customer = {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  address: {
-    city: string;
-    state: string;
-    country: string;
-  };
-};
-
-const customers: Customer[] = [
-  {
-    "id": 1,
-    "firstName": "Emily",
-    "lastName": "Johnson",
-    "email": "emily.johnson@x.dummyjson.com",
-    "phone": "+81 965-431-3024",
-    "address": {
-      "city": "Phoenix",
-      "state": "Mississippi",
-      "country": "United States"
-    },
-  },
-];
+import { Loader2 } from "lucide-react";
 
 const columnHelper = createColumnHelper<Customer>();
 
@@ -65,6 +44,35 @@ const columns = [
 ];
 
 export default function Customers() {
+  const {
+    customers,
+    isEmptyCustomers,
+    errorCustomers,
+    loadingCustomers,
+    getCustomers
+  } = usePlatform();
+
+  useEffect(() => {
+    if (loadingCustomers) getCustomers();
+  }, [loadingCustomers]);
+
+  const memoizedCustomers = useMemo(() => {
+    if (loadingCustomers) return <Loader2 className="animate-spin" size="1.65rem" />;
+
+    if (isEmptyCustomers) return <AppText size="mid" weight="bold" color="secondary">No customers found</AppText>;
+    if (errorCustomers) return <AppText size="mid" weight="bold" color="secondary">{errorCustomers}</AppText>;
+
+    return customers && <CustomersTable customers={customers} />;
+  }, [customers, isEmptyCustomers, errorCustomers, loadingCustomers]);
+
+  return (
+    <AppDiv width100 flexLayout="flexColumnStartLeft" gap="1.75rem">
+      {memoizedCustomers}
+    </AppDiv>
+  );
+}
+
+function CustomersTable({ customers }: { customers: Customer[] }) {
   const table = useReactTable({
     data: customers,
     columns,
@@ -72,39 +80,37 @@ export default function Customers() {
   });
 
   return (
-    <AppDiv width100 flexLayout="flexColumnStartLeft" gap="1.75rem">
-      <div className="rounded-md border">
-        <table className="w-full">
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th key={header.id} className="border-b px-4 py-3 text-left">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map(row => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map(cell => (
-                  <td key={cell.id} className="border-b px-4 py-3">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </AppDiv>
+    <div className="rounded-md border">
+      <table className="w-full">
+        <thead>
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th key={header.id} className="border-b px-4 py-3 text-left">
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map(row => (
+            <tr key={row.id}>
+              {row.getVisibleCells().map(cell => (
+                <td key={cell.id} className="border-b px-4 py-3">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

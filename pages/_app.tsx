@@ -10,9 +10,9 @@ import SafeProfileLayout from "@/layout/SafeProfileLayout";
 
 import AuthProvider from "@/context/auth";
 import CacheProvider from "@/context/caching";
+import Provider from "@/context/platform";
 import ThemeProvider from "@/context/theme";
 import ToastProvider from "@/context/toast";
-import Provider from "@/context/user";
 
 import "@/styles/theme/base.css";
 import "@/styles/container.css";

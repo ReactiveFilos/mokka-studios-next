@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 
 import { useTheme } from "@/context/theme";
-import { useUser } from "@/context/user";
+import { useUser } from "@/context/platform";
 
 import NextImage from "@/components/next/NextImage";
 
