@@ -20,13 +20,15 @@ export function BasicDataTable<TData>({
   return (
     <div className="w-full">
       <div className="w-full rounded-md border">
-        <div className="w-full">
-          <Table>
-            <TableHeader className="sticky top-0 bg-muted z-10 redBorder">
+        <div className="w-full overflow-auto" style={{ maxHeight: "calc(100vh - 300px)" }}>
+          <Table className="w-full">
+            <TableHeader className="sticky top-0 bg-muted z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id} className="font-semibold redBorder">
+                    <TableHead
+                      key={header.id}
+                      className="font-semibold whitespace-nowrap px-4">
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
@@ -35,10 +37,6 @@ export function BasicDataTable<TData>({
                 </TableRow>
               ))}
             </TableHeader>
-          </Table>
-        </div>
-        <div className="overflow-auto" style={{ maxHeight: "calc(100vh - 300px)" }}>
-          <Table>
             <TableBody>
               {isLoading && showSkeleton ? (
                 Array.from({ length: table.getState().pagination.pageSize || 10 }).map((_, index) => (
@@ -54,7 +52,9 @@ export function BasicDataTable<TData>({
                 table.getRowModel().rows.map((row) => (
                   <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell
+                        key={cell.id}
+                        className="overflow-hidden text-ellipsis whitespace-nowrap px-4">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}

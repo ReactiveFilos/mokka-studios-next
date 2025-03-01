@@ -1,14 +1,14 @@
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Customer } from "@/context/types/customer.type";
 
 import AppDiv from "@/components/app/AppDiv";
 import { BasicDataTable } from "@/components/table/basic-data-table";
+import { RowActions } from "@/components/table/data-table-row-actions";
 import DataTableSearch, { FilterType } from "@/components/table/data-table-search";
 
 import {
   createColumnHelper,
-  FilterFn,
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
@@ -18,42 +18,19 @@ const ROWS_PER_PAGE = 20;
 
 const columnHelper = createColumnHelper<Customer>();
 
-const columns = [
-  columnHelper.accessor("id", {
-    header: "ID",
-    cell: info => info.getValue(),
-  }),
-  columnHelper.accessor("firstName", {
-    header: "First",
-    cell: info => info.getValue(),
-  }),
-  columnHelper.accessor("lastName", {
-    header: "Last",
-    cell: info => info.getValue(),
-  }),
-  columnHelper.accessor("email", {
-    header: "Email",
-    cell: info => info.getValue(),
-  }),
-  columnHelper.accessor("phone", {
-    header: "Phone",
-    cell: info => info.getValue(),
-  }),
-  columnHelper.accessor("address", {
-    header: "Location",
-    cell: info => {
-      const address = info.getValue();
-      return `${address.city}, ${address.state}, ${address.country}`;
-    },
-  }),
-];
-
 interface DataTableProps {
   customers: Customer[];
   isLoading: boolean;
+  onEdit?: (customer: Customer) => void;
+  onDelete?: (customer: Customer) => void;
 }
 
-export function DataTable({ customers, isLoading }: DataTableProps) {
+export function DataTable({
+  customers,
+  isLoading,
+  onEdit,
+  onDelete
+}: DataTableProps) {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: ROWS_PER_PAGE,
@@ -61,58 +38,47 @@ export function DataTable({ customers, isLoading }: DataTableProps) {
 
   const [filters, setFilters] = useState<FilterType[]>([]);
 
-  // Filter function for customer data
-  const filterFn: FilterFn<Customer> = useCallback(
-    (row, columnId, value) => {
-      if (!value || !value.length) return true;
-
-      // Special handling for the address field
-      if (columnId === "address") {
-        const addressObj = row.getValue(columnId) as Customer["address"];
-        const addressStr = `${addressObj.city}, ${addressObj.state}, ${addressObj.country}`.toLowerCase();
-
-        return value.every((filter: FilterType) => {
-          if (filter.field !== columnId) return true;
-
-          const filterValue = filter.value.toLowerCase();
-          switch (filter.operator) {
-            case "contains":
-              return addressStr.includes(filterValue);
-            case "equals":
-              return addressStr === filterValue;
-            case "startsWith":
-              return addressStr.startsWith(filterValue);
-            case "endsWith":
-              return addressStr.endsWith(filterValue);
-            default:
-              return true;
-          }
-        });
-      }
-
-      // Regular field handling
-      const cellValue = String(row.getValue(columnId) || "").toLowerCase();
-
-      return value.every((filter: FilterType) => {
-        if (filter.field !== columnId) return true;
-
-        const filterValue = filter.value.toLowerCase();
-        switch (filter.operator) {
-          case "contains":
-            return cellValue.includes(filterValue);
-          case "equals":
-            return cellValue === filterValue;
-          case "startsWith":
-            return cellValue.startsWith(filterValue);
-          case "endsWith":
-            return cellValue.endsWith(filterValue);
-          default:
-            return true;
-        }
-      });
-    },
-    []
-  );
+  const columns = useMemo(() => [
+    columnHelper.accessor("id", {
+      header: "ID",
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor("firstName", {
+      header: "First",
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor("lastName", {
+      header: "Last",
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor("email", {
+      header: "Email",
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor("phone", {
+      header: "Phone",
+      cell: info => info.getValue(),
+    }),
+    columnHelper.accessor("address", {
+      header: "Location",
+      cell: info => {
+        const address = info.getValue();
+        return `${address.city}, ${address.state}, ${address.country}`;
+      },
+    }),
+    // Add actions column
+    columnHelper.display({
+      id: "actions",
+      header: "",
+      cell: ({ row }) => (
+        <RowActions
+          data={row.original}
+          onEdit={onEdit ? () => onEdit(row.original) : undefined}
+          onDelete={onDelete ? () => onDelete(row.original) : undefined}
+        />
+      ),
+    }),
+  ], [onEdit, onDelete]);
 
   // Apply filters to the data
   const filteredData = useMemo(() => {
@@ -149,7 +115,6 @@ export function DataTable({ customers, isLoading }: DataTableProps) {
     getPaginationRowModel: getPaginationRowModel(),
     state: {
       pagination,
-      globalFilter: filters,
     },
     onPaginationChange: setPagination,
     manualPagination: false,

@@ -11,6 +11,8 @@ type ContextProps = {
   errorCustomers: string | null;
   loadingCustomers: boolean;
   getCustomers: () => Promise<void>;
+  updateCustomer: (customer: Customer) => Promise<void>;
+  deleteCustomer: (id: number) => Promise<void>;
 
 };
 
@@ -29,6 +31,8 @@ const Provider = ({ children, previousRoute }: ProviderProps) => {
     errorCustomers,
     loadingCustomers,
     getCustomers,
+    updateCustomer,
+    deleteCustomer
   } = useCustomers();
 
   const contextValues: ContextProps = useMemo(() => ({
@@ -39,6 +43,8 @@ const Provider = ({ children, previousRoute }: ProviderProps) => {
     errorCustomers,
     loadingCustomers,
     getCustomers,
+    updateCustomer,
+    deleteCustomer
 
   }), [
     previousRoute,

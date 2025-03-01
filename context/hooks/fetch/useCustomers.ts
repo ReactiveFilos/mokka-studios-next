@@ -24,6 +24,28 @@ export const useCustomers = () => {
     data, setData, isEmpty, setIsEmpty, error, loading, fetchData
   } = useDataFetcher<Customer[]>(fetcher);
 
+  const updateCustomer = async (customer: Customer) => {
+    try {
+      const res = await axiosInstance.put(`/api/customers/${customer.id}`, customer);
+      if (res.status === 200 && res.data) {
+        setData(data.map((c) => c.id === customer.id ? customer : c));
+      }
+    } catch (error) {
+      throw new Error("Failed to update customer");
+    }
+  };
+
+  const deleteCustomer = async (id: number) => {
+    try {
+      const res = await axiosInstance.delete(`/api/customers/${id}`);
+      if (res.status === 200) {
+        setData(data.filter((c) => c.id !== id));
+      }
+    } catch (error) {
+      throw new Error("Failed to delete customer");
+    }
+  };
+
   return {
     customers: data,
     setCustomers: setData,
@@ -32,5 +54,7 @@ export const useCustomers = () => {
     errorCustomers: error,
     loadingCustomers: loading,
     getCustomers: fetchData,
+    updateCustomer,
+    deleteCustomer
   };
 };
