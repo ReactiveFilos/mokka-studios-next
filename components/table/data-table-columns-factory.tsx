@@ -29,8 +29,10 @@ export function createStandardColumns<T extends Record<string, any>>(
         cell: ({ row }) => (
           <RowActions
             data={row.original}
-            entityType={options.entityType}
-            actions={options.actionConfig}
+            actions={{
+              onEdit: options.actions?.onEdit,
+              onDelete: options.actions?.onDelete,
+            }}
           />
         ),
       })

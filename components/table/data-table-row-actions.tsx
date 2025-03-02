@@ -1,12 +1,7 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
-import { getDialogForEntity } from "@/components/table/dialog/data-table-dialog-factory";
-import {
-  ActionConfig,
-  ActionType,
-  EntityType,
-  STANDARD_ACTIONS
-} from "@/components/table/types";
+import { DeleteDialog, EditDialog } from "@/components/table/data-table-dialog";
+import { ActionType, STANDARD_ACTIONS } from "@/components/table/types";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -19,68 +14,52 @@ import { MoreHorizontal } from "lucide-react";
 
 interface RowActionsProps<T> {
   data: T;
-  entityType: EntityType;
-  actions?: ActionConfig<T>;
+  actions?: {
+    onEdit?: (data: T) => void;
+    onDelete?: (data: T) => void;
+  };
 }
 
 export function RowActions<T>({
   data,
-  entityType,
-  actions = { edit: true, delete: true },
+  actions = {},
 }: RowActionsProps<T>) {
-  const [dialogState, setDialogState] = useState<{
-    type: ActionType | null;
-    open: boolean;
-  }>({
-    type: null,
-    open: false,
-  });
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
 
-  const handleAction = (actionType: ActionType) => {
-    const actionHandler = actions[actionType];
-
-    if (typeof actionHandler === "function") {
-      actionHandler(data);
-    } else {
-      setDialogState({ type: actionType, open: true });
+  const handleAction = useCallback((actionType: ActionType) => {
+    switch (actionType) {
+      case "edit":
+        setIsEditDialogOpen(true);
+        break;
+      case "delete":
+        setIsDeleteDialogOpen(true);
+        break;
     }
-  };
+  }, []);
 
-  const handleDialogClose = () => {
-    setDialogState({ type: null, open: false });
-  };
-
-  const handleDialogConfirm = () => {
-    // Handle confirmation logic
-    const actionHandler = actions[dialogState.type as ActionType];
-    if (typeof actionHandler === "function") {
-      actionHandler(data);
-    }
-    handleDialogClose();
-  };
-
-  // Render the active dialog
-  const RenderActiveDialog = () => {
-    if (!dialogState.open || !dialogState.type) return null;
-
-    return getDialogForEntity(
-      entityType,
-      dialogState.type,
-      {
-        open: dialogState.open,
-        onOpenChange: (open: boolean) => setDialogState(prev => ({ ...prev, open })),
-        onConfirm: handleDialogConfirm,
-        onSave: handleDialogConfirm,
-        data
-      }
-    );
-  };
-
-  // Get all available standard actions based on the props
-  const availableStandardActions = Object.entries(actions)
-    .filter(([_, enabled]) => enabled) // Filter only enabled actions
+  // Get enabled standard actions
+  const availableStandardActions = Object.entries({
+    edit: actions.onEdit !== undefined,
+    delete: actions.onDelete !== undefined,
+  })
+    .filter(([_, enabled]) => enabled === true)
     .map(([type]) => type as ActionType)
-    .filter(type => type in STANDARD_ACTIONS); // Ensure it's a standard action
+    .filter(type => type in STANDARD_ACTIONS);
+
+  const handleEdit = useCallback((formData: T) => {
+    if (actions.onEdit) {
+      actions.onEdit(formData);
+    }
+    setIsEditDialogOpen(false);
+  }, [actions.onEdit]);
+
+  const handleDelete = useCallback(() => {
+    if (actions.onDelete) {
+      actions.onDelete(data);
+    }
+    setIsDeleteDialogOpen(false);
+  }, [actions.onDelete, data]);
 
   return (
     <>
@@ -104,7 +83,18 @@ export function RowActions<T>({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <RenderActiveDialog />
+      <EditDialog
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        onSave={handleEdit}
+        data={data}
+      />
+      <DeleteDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={handleDelete}
+        data={data}
+      />
     </>
   );
 }

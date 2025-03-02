@@ -32,10 +32,8 @@ export default function DataTableSearch({
   const [filters, setFilters] = useState<FilterType[]>([]);
   const [open, setOpen] = useState(false);
 
-  const initialField = filterFields.length > 0 ? filterFields[0].value : "";
-
   const [currentFilter, setCurrentFilter] = useState<Omit<FilterType, "id">>({
-    field: initialField,
+    field: filterFields.length > 0 ? filterFields[0].value : "",
     operator: "contains",
     value: "",
   });

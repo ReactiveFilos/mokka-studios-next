@@ -30,41 +30,6 @@ export default function Customers() {
     if (loadingCustomers) getCustomers();
   }, [loadingCustomers]);
 
-  const columns = useMemo(() => createStandardColumns<Customer>(
-    [
-      { accessorKey: "id", header: "ID" },
-      { accessorKey: "firstName", header: "First" },
-      { accessorKey: "lastName", header: "Last" },
-      { accessorKey: "email", header: "Email" },
-      { accessorKey: "phone", header: "Phone" },
-      {
-        accessorKey: "address",
-        header: "Location",
-        cell: info => {
-          const address = info.getValue();
-          return `${address.city}, ${address.state}, ${address.country}`;
-        }
-      },
-    ],
-    {
-      entityType: "customer",
-      includeActions: true,
-      actionConfig: {
-        edit: (customer) => updateCustomer(customer),
-        delete: (customer) => deleteCustomer(customer.id),
-      }
-    }
-  ), [updateCustomer, deleteCustomer]);
-
-  const filterableFields = [
-    { value: "firstName", label: "First Name", icon: User },
-    { value: "lastName", label: "Last Name", icon: User },
-    { value: "email", label: "Email", icon: Mail },
-    { value: "phone", label: "Phone", icon: Phone },
-    { value: "address.city", label: "City", icon: MapPin },
-    { value: "address.country", label: "Country", icon: MapPin },
-  ];
-
   const handleEdit = useCallback(async (customer: Customer) => {
     try {
       await updateCustomer(customer);
@@ -82,6 +47,40 @@ export default function Customers() {
       errorToast({ id: "CustomerDelete", message: "Failed to delete customer" });
     }
   }, [deleteCustomer]);
+
+  const columns = useMemo(() => createStandardColumns<Customer>(
+    [
+      { accessorKey: "id", header: "ID" },
+      { accessorKey: "firstName", header: "First" },
+      { accessorKey: "lastName", header: "Last" },
+      { accessorKey: "email", header: "Email" },
+      { accessorKey: "phone", header: "Phone" },
+      {
+        accessorKey: "address",
+        header: "Location",
+        cell: info => {
+          const address = info.getValue();
+          return `${address.city}, ${address.state}, ${address.country}`;
+        }
+      },
+    ],
+    {
+      includeActions: true,
+      actions: {
+        onEdit: handleEdit,
+        onDelete: handleDelete
+      }
+    }
+  ), [handleEdit, handleDelete]);
+
+  const filterableFields = [
+    { value: "firstName", label: "First Name", icon: User },
+    { value: "lastName", label: "Last Name", icon: User },
+    { value: "email", label: "Email", icon: Mail },
+    { value: "phone", label: "Phone", icon: Phone },
+    { value: "address.city", label: "City", icon: MapPin },
+    { value: "address.country", label: "Country", icon: MapPin },
+  ];
 
   const memoizedCustomers = useMemo(() => {
     // if (loadingCustomers) return <Loader2 className="animate-spin" size="1.65rem" />;
