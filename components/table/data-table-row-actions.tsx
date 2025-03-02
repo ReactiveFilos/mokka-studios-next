@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { DeleteDialog } from "@/components/table/data-table-dialog";
-import { EditDialog } from "@/components/table/data-table-dialog";
+import { getDialogForEntity } from "@/components/table/dialog/data-table-dialog-factory";
+import { EntityType } from "@/components/table/types";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,26 +10,80 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+
+// Define all possible actions
+interface ActionDefinition {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  action: (data: any) => void;
+}
 
 interface RowActionsProps<T> {
   data: T;
-  onEdit?: () => void;
-  onDelete?: () => void;
+  entityType: EntityType;
+  actions?: {
+    edit?: boolean | ((data: T) => void);
+    delete?: boolean | ((data: T) => void);
+    preview?: boolean | ((data: T) => void);
+    [key: string]: boolean | ((data: T) => void) | undefined;
+  };
+  customActions?: ActionDefinition[];
 }
 
-export function RowActions<T>({ data, onEdit, onDelete }: RowActionsProps<T>) {
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+export function RowActions<T>({
+  data,
+  entityType,
+  actions = { edit: true, delete: true },
+  customActions = []
+}: RowActionsProps<T>) {
+  const [dialogState, setDialogState] = useState<{
+    type: string | null;
+    open: boolean;
+  }>({
+    type: null,
+    open: false,
+  });
 
-  const handleDelete = () => {
-    if (onDelete) onDelete();
-    setIsDeleteDialogOpen(false);
+  const handleAction = (actionType: string) => {
+    const actionHandler = actions[actionType];
+
+    if (typeof actionHandler === "function") {
+      actionHandler(data);
+    } else {
+      setDialogState({ type: actionType, open: true });
+    }
   };
 
-  const handleEdit = (updatedData: T) => {
-    if (onEdit) onEdit();
-    setIsEditDialogOpen(false);
+  const handleDialogClose = () => {
+    setDialogState({ type: null, open: false });
+  };
+
+  const handleDialogConfirm = () => {
+    // Handle confirmation logic
+    const actionHandler = actions[dialogState.type as string];
+    if (typeof actionHandler === "function") {
+      actionHandler(data);
+    }
+    handleDialogClose();
+  };
+
+  // Render the active dialog
+  const RenderActiveDialog = () => {
+    if (!dialogState.open || !dialogState.type) return null;
+
+    return getDialogForEntity(
+      entityType,
+      dialogState.type as any,
+      {
+        open: dialogState.open,
+        onOpenChange: (open: boolean) => setDialogState(prev => ({ ...prev, open })),
+        onConfirm: handleDialogConfirm,
+        onSave: handleDialogConfirm,
+        data
+      }
+    );
   };
 
   return (
@@ -42,34 +96,34 @@ export function RowActions<T>({ data, onEdit, onDelete }: RowActionsProps<T>) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {onEdit && (
-            <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+          {actions.edit && (
+            <DropdownMenuItem onClick={() => handleAction("edit")}>
               <Pencil className="mr-2 h-4 w-4" />
               <span>Edit</span>
             </DropdownMenuItem>
           )}
-          {onDelete && (
-            <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+          {actions.delete && (
+            <DropdownMenuItem onClick={() => handleAction("delete")}>
               <Trash2 className="mr-2 h-4 w-4" />
               <span>Delete</span>
             </DropdownMenuItem>
           )}
+          {actions.preview && (
+            <DropdownMenuItem onClick={() => handleAction("preview")}>
+              <Eye className="mr-2 h-4 w-4" />
+              <span>Preview</span>
+            </DropdownMenuItem>
+          )}
+          {customActions.map(action => (
+            <DropdownMenuItem key={action.id} onClick={() => action.action(data)}>
+              {action.icon}
+              <span>{action.label}</span>
+            </DropdownMenuItem>
+          ))}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <DeleteDialog
-        open={isDeleteDialogOpen}
-        onOpenChange={setIsDeleteDialogOpen}
-        onConfirm={handleDelete}
-        data={data}
-      />
-
-      <EditDialog
-        open={isEditDialogOpen}
-        onOpenChange={setIsEditDialogOpen}
-        onSave={handleEdit}
-        data={data}
-      />
+      <RenderActiveDialog />
     </>
   );
 }

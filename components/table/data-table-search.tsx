@@ -7,18 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-import {
-  ArrowLeft,
-  ArrowRight,
-  ChevronDown,
-  Equal,
-  Filter,
-  Mail,
-  MapPin,
-  Phone,
-  User,
-  X,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, Equal, Filter, X } from "lucide-react";
 
 export type FilterType = {
   id: string
@@ -27,14 +16,7 @@ export type FilterType = {
   value: string
 }
 
-const filterFields = [
-  { value: "firstName", label: "First Name", icon: User },
-  { value: "lastName", label: "Last Name", icon: User },
-  { value: "email", label: "Email", icon: Mail },
-  { value: "phone", label: "Phone", icon: Phone },
-  { value: "address", label: "Location", icon: MapPin },
-];
-
+// Default operators that can be used for filtering
 const operatorOptions = {
   default: [
     { value: "equals", label: "Equals", icon: Equal },
@@ -45,14 +27,25 @@ const operatorOptions = {
 };
 
 interface DataTableSearchProps {
-  onFiltersChange: (filters: FilterType[]) => void
+  onFiltersChange: (filters: FilterType[]) => void;
+  filterFields?: Array<{
+    value: string;
+    label: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }>;
 }
 
-export default function DataTableSearch({ onFiltersChange }: DataTableSearchProps) {
+export default function DataTableSearch({
+  onFiltersChange,
+  filterFields = []
+}: DataTableSearchProps) {
   const [filters, setFilters] = useState<FilterType[]>([]);
   const [open, setOpen] = useState(false);
+
+  const initialField = filterFields.length > 0 ? filterFields[0].value : "";
+
   const [currentFilter, setCurrentFilter] = useState<Omit<FilterType, "id">>({
-    field: "firstName",
+    field: initialField,
     operator: "contains",
     value: "",
   });
@@ -74,6 +67,11 @@ export default function DataTableSearch({ onFiltersChange }: DataTableSearchProp
     onFiltersChange(updatedFilters);
   };
 
+  // Don't render anything if no filter fields are provided
+  if (filterFields.length === 0) {
+    return null;
+  }
+
   return (
     <div className="flex flex-wrap items-center gap-2">
       <Popover open={open} onOpenChange={setOpen}>
@@ -84,7 +82,7 @@ export default function DataTableSearch({ onFiltersChange }: DataTableSearchProp
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-80">
+        <PopoverContent className="w-80" collisionPadding={10}>
           <div className="grid gap-4">
             <div className="space-y-2">
               <h4 className="font-medium leading-none">Filter</h4>
@@ -103,7 +101,9 @@ export default function DataTableSearch({ onFiltersChange }: DataTableSearchProp
                   {filterFields.map((field) => (
                     <SelectItem key={field.value} value={field.value}>
                       <div className="flex items-center">
-                        <field.icon className="mr-2 h-4 w-4" />
+                        {field.icon && (
+                          <field.icon className="mr-2 h-4 w-4" />
+                        )}
                         {field.label}
                       </div>
                     </SelectItem>

@@ -1,95 +1,49 @@
 import { useMemo, useState } from "react";
 
-import { Customer } from "@/context/types/customer.type";
-
 import AppDiv from "@/components/app/AppDiv";
 import { BasicDataTable } from "@/components/table/basic-data-table";
-import { RowActions } from "@/components/table/data-table-row-actions";
 import DataTableSearch, { FilterType } from "@/components/table/data-table-search";
 
 import {
-  createColumnHelper,
+  ColumnDef,
   getCoreRowModel,
   getPaginationRowModel,
-  useReactTable,
+  useReactTable
 } from "@tanstack/react-table";
 
-const ROWS_PER_PAGE = 20;
-
-const columnHelper = createColumnHelper<Customer>();
-
-interface DataTableProps {
-  customers: Customer[];
+interface DataTableProps<TData> {
+  data: TData[];
+  columns: ColumnDef<TData, any>[];
   isLoading: boolean;
-  onEdit?: (customer: Customer) => void;
-  onDelete?: (customer: Customer) => void;
+  filterableFields?: Array<{
+    value: string;
+    label: string;
+    icon?: React.ComponentType<{ className?: string }>;
+  }>;
+  initialPageSize?: number;
 }
 
-export function DataTable({
-  customers,
+export function DataTable<TData>({
+  data,
+  columns,
   isLoading,
-  onEdit,
-  onDelete
-}: DataTableProps) {
+  filterableFields = [],
+  initialPageSize = 20,
+}: DataTableProps<TData>) {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
-    pageSize: ROWS_PER_PAGE,
+    pageSize: initialPageSize,
   });
 
   const [filters, setFilters] = useState<FilterType[]>([]);
 
-  const columns = useMemo(() => [
-    columnHelper.accessor("id", {
-      header: "ID",
-      cell: info => info.getValue(),
-    }),
-    columnHelper.accessor("firstName", {
-      header: "First",
-      cell: info => info.getValue(),
-    }),
-    columnHelper.accessor("lastName", {
-      header: "Last",
-      cell: info => info.getValue(),
-    }),
-    columnHelper.accessor("email", {
-      header: "Email",
-      cell: info => info.getValue(),
-    }),
-    columnHelper.accessor("phone", {
-      header: "Phone",
-      cell: info => info.getValue(),
-    }),
-    columnHelper.accessor("address", {
-      header: "Location",
-      cell: info => {
-        const address = info.getValue();
-        return `${address.city}, ${address.state}, ${address.country}`;
-      },
-    }),
-    // Add actions column
-    columnHelper.display({
-      id: "actions",
-      header: "",
-      cell: ({ row }) => (
-        <RowActions
-          data={row.original}
-          onEdit={onEdit ? () => onEdit(row.original) : undefined}
-          onDelete={onDelete ? () => onDelete(row.original) : undefined}
-        />
-      ),
-    }),
-  ], [onEdit, onDelete]);
-
   // Apply filters to the data
   const filteredData = useMemo(() => {
-    if (filters.length === 0) return customers;
+    if (filters.length === 0) return data;
 
-    return customers.filter(customer => {
+    return data.filter(item => {
       return filters.every(filter => {
-        const value = filter.field === "address"
-          ? `${customer.address.city}, ${customer.address.state}, ${customer.address.country}`.toLowerCase()
-          : String(customer[filter.field as keyof Customer] || "").toLowerCase();
-
+        const value = String(getNestedProperty(item, filter.field) || "").toLowerCase();
         const filterValue = filter.value.toLowerCase();
 
         switch (filter.operator) {
@@ -106,7 +60,7 @@ export function DataTable({
         }
       });
     });
-  }, [customers, filters]);
+  }, [data, filters]);
 
   const table = useReactTable({
     data: filteredData,
@@ -128,9 +82,14 @@ export function DataTable({
 
   return (
     <AppDiv width100 flexLayout="flexColumnStartLeft" gap="1.75rem">
-      <div className="w-full">
-        <DataTableSearch onFiltersChange={handleFiltersChange} />
-      </div>
+      {filterableFields.length > 0 && (
+        <div className="w-full">
+          <DataTableSearch
+            filterFields={filterableFields}
+            onFiltersChange={handleFiltersChange}
+          />
+        </div>
+      )}
       <BasicDataTable
         table={table}
         isLoading={isLoading}
@@ -138,4 +97,9 @@ export function DataTable({
       />
     </AppDiv>
   );
+}
+
+// Helper function to access nested properties with dot notation
+function getNestedProperty(obj: any, path: string): any {
+  return path.split(".").reduce((prev, curr) => prev && prev[curr], obj);
 }
