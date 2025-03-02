@@ -1,26 +1,12 @@
 import { RowActions } from "@/components/table/data-table-row-actions";
-import { ActionDefinition, EntityType } from "@/components/table/types";
+import { ColumnConfig, TableOptions } from "@/components/table/types";
 
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 // Function to create standard columns for an entity
 export function createStandardColumns<T extends Record<string, any>>(
-  columnConfig: Array<{
-    accessorKey: keyof T | string;
-    header: string;
-    cell?: (info: any) => React.ReactNode;
-    meta?: Record<string, any>;
-  }>,
-  options: {
-    entityType: EntityType;
-    includeActions?: boolean;
-    actionConfig?: {
-      edit?: boolean | ((data: T) => void);
-      delete?: boolean | ((data: T) => void);
-      preview?: boolean | ((data: T) => void);
-    };
-    customActions?: Array<ActionDefinition<T>>;
-  }
+  columnConfig: ColumnConfig<T>[],
+  options: TableOptions<T>
 ): ColumnDef<T, any>[] {
   const columnHelper = createColumnHelper<T>();
 
@@ -45,7 +31,6 @@ export function createStandardColumns<T extends Record<string, any>>(
             data={row.original}
             entityType={options.entityType}
             actions={options.actionConfig}
-            customActions={options.customActions}
           />
         ),
       })

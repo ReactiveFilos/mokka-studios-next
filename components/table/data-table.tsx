@@ -2,24 +2,16 @@ import { useMemo, useState } from "react";
 
 import AppDiv from "@/components/app/AppDiv";
 import { BasicDataTable } from "@/components/table/basic-data-table";
-import DataTableSearch, { FilterType } from "@/components/table/data-table-search";
+import DataTableSearch from "@/components/table/data-table-search";
+import { FilterableField, FilterType } from "@/components/table/types";
 
-import {
-  ColumnDef,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable
-} from "@tanstack/react-table";
+import { ColumnDef, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
 
 interface DataTableProps<TData> {
   data: TData[];
   columns: ColumnDef<TData, any>[];
   isLoading: boolean;
-  filterableFields?: Array<{
-    value: string;
-    label: string;
-    icon?: React.ComponentType<{ className?: string }>;
-  }>;
+  filterableFields?: FilterableField[];
   initialPageSize?: number;
 }
 

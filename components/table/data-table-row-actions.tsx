@@ -1,7 +1,12 @@
 import { useState } from "react";
 
 import { getDialogForEntity } from "@/components/table/dialog/data-table-dialog-factory";
-import { EntityType } from "@/components/table/types";
+import {
+  ActionConfig,
+  ActionType,
+  EntityType,
+  STANDARD_ACTIONS
+} from "@/components/table/types";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,43 +15,28 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 
-import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
-
-// Define all possible actions
-interface ActionDefinition {
-  id: string;
-  label: string;
-  icon: React.ReactNode;
-  action: (data: any) => void;
-}
+import { MoreHorizontal } from "lucide-react";
 
 interface RowActionsProps<T> {
   data: T;
   entityType: EntityType;
-  actions?: {
-    edit?: boolean | ((data: T) => void);
-    delete?: boolean | ((data: T) => void);
-    preview?: boolean | ((data: T) => void);
-    [key: string]: boolean | ((data: T) => void) | undefined;
-  };
-  customActions?: ActionDefinition[];
+  actions?: ActionConfig<T>;
 }
 
 export function RowActions<T>({
   data,
   entityType,
   actions = { edit: true, delete: true },
-  customActions = []
 }: RowActionsProps<T>) {
   const [dialogState, setDialogState] = useState<{
-    type: string | null;
+    type: ActionType | null;
     open: boolean;
   }>({
     type: null,
     open: false,
   });
 
-  const handleAction = (actionType: string) => {
+  const handleAction = (actionType: ActionType) => {
     const actionHandler = actions[actionType];
 
     if (typeof actionHandler === "function") {
@@ -62,7 +52,7 @@ export function RowActions<T>({
 
   const handleDialogConfirm = () => {
     // Handle confirmation logic
-    const actionHandler = actions[dialogState.type as string];
+    const actionHandler = actions[dialogState.type as ActionType];
     if (typeof actionHandler === "function") {
       actionHandler(data);
     }
@@ -75,7 +65,7 @@ export function RowActions<T>({
 
     return getDialogForEntity(
       entityType,
-      dialogState.type as any,
+      dialogState.type,
       {
         open: dialogState.open,
         onOpenChange: (open: boolean) => setDialogState(prev => ({ ...prev, open })),
@@ -85,6 +75,12 @@ export function RowActions<T>({
       }
     );
   };
+
+  // Get all available standard actions based on the props
+  const availableStandardActions = Object.entries(actions)
+    .filter(([_, enabled]) => enabled) // Filter only enabled actions
+    .map(([type]) => type as ActionType)
+    .filter(type => type in STANDARD_ACTIONS); // Ensure it's a standard action
 
   return (
     <>
@@ -96,30 +92,15 @@ export function RowActions<T>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          {actions.edit && (
-            <DropdownMenuItem onClick={() => handleAction("edit")}>
-              <Pencil className="mr-2 h-4 w-4" />
-              <span>Edit</span>
-            </DropdownMenuItem>
-          )}
-          {actions.delete && (
-            <DropdownMenuItem onClick={() => handleAction("delete")}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              <span>Delete</span>
-            </DropdownMenuItem>
-          )}
-          {actions.preview && (
-            <DropdownMenuItem onClick={() => handleAction("preview")}>
-              <Eye className="mr-2 h-4 w-4" />
-              <span>Preview</span>
-            </DropdownMenuItem>
-          )}
-          {customActions.map(action => (
-            <DropdownMenuItem key={action.id} onClick={() => action.action(data)}>
-              {action.icon}
-              <span>{action.label}</span>
-            </DropdownMenuItem>
-          ))}
+          {availableStandardActions.map(actionType => {
+            const { icon: Icon, label } = STANDARD_ACTIONS[actionType];
+            return (
+              <DropdownMenuItem key={actionType} onClick={() => handleAction(actionType)}>
+                <Icon className="mr-2 h-4 w-4" />
+                <span>{label}</span>
+              </DropdownMenuItem>
+            );
+          })}
         </DropdownMenuContent>
       </DropdownMenu>
 

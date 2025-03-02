@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { FilterableField, FilterType } from "@/components/table/types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,13 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 import { ArrowLeft, ArrowRight, ChevronDown, Equal, Filter, X } from "lucide-react";
-
-export type FilterType = {
-  id: string
-  field: string
-  operator: string
-  value: string
-}
 
 // Default operators that can be used for filtering
 const operatorOptions = {
@@ -27,17 +21,13 @@ const operatorOptions = {
 };
 
 interface DataTableSearchProps {
+  filterFields?: FilterableField[];
   onFiltersChange: (filters: FilterType[]) => void;
-  filterFields?: Array<{
-    value: string;
-    label: string;
-    icon?: React.ComponentType<{ className?: string }>;
-  }>;
 }
 
 export default function DataTableSearch({
-  onFiltersChange,
-  filterFields = []
+  filterFields = [],
+  onFiltersChange
 }: DataTableSearchProps) {
   const [filters, setFilters] = useState<FilterType[]>([]);
   const [open, setOpen] = useState(false);
