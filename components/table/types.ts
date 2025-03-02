@@ -12,7 +12,8 @@ export interface ColumnConfig<T> {
 
 // Table options
 export interface TableOptions<T> {
-  includeActions?: boolean;
+  entityType: EntityType;
+  includeActions: boolean;
   actions?: {
     onEdit?: (data: T) => void;
     onDelete?: (data: T) => void;
@@ -49,6 +50,7 @@ export const STANDARD_ACTIONS: Record<ActionType, {
 export interface BaseDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  entityType: EntityType;
 }
 
 export interface EditDialogProps<T> extends BaseDialogProps {

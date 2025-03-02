@@ -65,6 +65,7 @@ export default function Customers() {
       },
     ],
     {
+      entityType: "customer",
       includeActions: true,
       actions: {
         onEdit: handleEdit,

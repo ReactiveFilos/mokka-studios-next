@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 
 import { DeleteDialog, EditDialog } from "@/components/table/data-table-dialog";
-import { ActionType, STANDARD_ACTIONS } from "@/components/table/types";
+import { ActionType, EntityType, STANDARD_ACTIONS } from "@/components/table/types";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,6 +14,7 @@ import { MoreHorizontal } from "lucide-react";
 
 interface RowActionsProps<T> {
   data: T;
+  entityType: EntityType;
   actions?: {
     onEdit?: (data: T) => void;
     onDelete?: (data: T) => void;
@@ -22,6 +23,7 @@ interface RowActionsProps<T> {
 
 export function RowActions<T>({
   data,
+  entityType,
   actions = {},
 }: RowActionsProps<T>) {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
@@ -88,12 +90,14 @@ export function RowActions<T>({
         onOpenChange={setIsEditDialogOpen}
         onSave={handleEdit}
         data={data}
+        entityType={entityType}
       />
       <DeleteDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         onConfirm={handleDelete}
         data={data}
+        entityType={entityType}
       />
     </>
   );

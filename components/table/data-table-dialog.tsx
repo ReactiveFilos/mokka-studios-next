@@ -18,11 +18,6 @@ import { Label } from "@/components/ui/label";
 // Entity renderer interfaces
 interface EntityRenderer<T = any> {
   /**
-   * Type guard function to check if data matches this entity type
-   */
-  typeGuard: (data: any) => data is T;
-
-  /**
    * Renders the delete dialog info section
    */
   deleteInfoRenderer: (data: T) => React.ReactNode;
@@ -38,7 +33,7 @@ interface EntityRenderer<T = any> {
   handleSpecialFieldChange?: (key: string, value: any, formData: T) => T;
 }
 
-// Registry of entity renderers
+// Registry of entity renderers (now with direct EntityType keys)
 const entityRenderers = new Map<EntityType, EntityRenderer>();
 
 /**
@@ -58,11 +53,11 @@ export function DeleteDialog<T>({
   open,
   onOpenChange,
   onConfirm,
-  data
+  data,
+  entityType
 }: DeleteDialogProps<T>) {
-  // Try to find a renderer for this entity type
-  const renderer = Array.from(entityRenderers.entries())
-    .find(([_, r]) => r.typeGuard(data))?.[1];
+  // Get the renderer directly by entity type
+  const renderer = entityRenderers.get(entityType);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -104,13 +99,13 @@ export function EditDialog<T>({
   open,
   onOpenChange,
   onSave,
-  data
+  data,
+  entityType
 }: EditDialogProps<T>) {
   const [formData, setFormData] = useState<T>(data);
 
-  // Try to find a renderer for this entity type
-  const renderer = Array.from(entityRenderers.entries())
-    .find(([_, r]) => r.typeGuard(data))?.[1];
+  // Get the renderer directly by entity type
+  const renderer = entityRenderers.get(entityType);
 
   const handleInputChange = (key: string, value: any) => {
     // Check if the entity has a special field handler
@@ -166,14 +161,6 @@ export function EditDialog<T>({
  * Register the Customer entity renderer
  */
 registerEntity<Customer>("customer", {
-  typeGuard: (data): data is Customer => {
-    return data &&
-      typeof data === "object" &&
-      "firstName" in data &&
-      "lastName" in data &&
-      "email" in data;
-  },
-
   deleteInfoRenderer: (data) => (
     <div className="my-4 p-4 border rounded-md bg-muted/50">
       <div className="grid gap-3">
