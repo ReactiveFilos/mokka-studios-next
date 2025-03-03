@@ -31,20 +31,20 @@ export default function Customers() {
   }, [loadingCustomers]);
 
   const handleEdit = useCallback(async (customer: Customer) => {
-    try {
-      await updateCustomer(customer);
-      successToast({ id: "CustomerUpdate", message: "Customer updated successfully" });
-    } catch (error) {
-      errorToast({ id: "CustomerUpdate", message: "Failed to update customer" });
+    const { success, message } = await updateCustomer(customer);
+    if (success) {
+      successToast({ id: "CustomerUpdate", message });
+    } else {
+      errorToast({ id: "CustomerUpdate", message });
     }
   }, [updateCustomer]);
 
   const handleDelete = useCallback(async (customer: Customer) => {
-    try {
-      await deleteCustomer(customer.id);
-      successToast({ id: "CustomerDelete", message: "Customer deleted successfully" });
-    } catch (error) {
-      errorToast({ id: "CustomerDelete", message: "Failed to delete customer" });
+    const { success, message } = await deleteCustomer(customer.id);
+    if (success) {
+      successToast({ id: "CustomerDelete", message });
+    } else {
+      errorToast({ id: "CustomerDelete", message });
     }
   }, [deleteCustomer]);
 

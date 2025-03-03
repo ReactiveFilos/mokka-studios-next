@@ -24,33 +24,43 @@ export const useCustomers = () => {
     data, setData, isEmpty, setIsEmpty, error, loading, fetchData
   } = useDataFetcher<Customer[]>(fetcher);
 
-  const updateCustomer = async (customer: Customer) => {
+  async function updateCustomer(customer: Customer): Promise<{ success: boolean, message: string }> {
     try {
       const res = await axiosInstance.put(`/api/customers/${customer.id}`, customer);
       if (res.status === 200 && res.data) {
-        setData(data.map((c) => c.id === customer.id ? customer : c));
+        const updatedCustomer = res.data;
+
+        setData(prevCustomers =>
+          prevCustomers
+            ? prevCustomers.map(c => c.id === updatedCustomer.id ? updatedCustomer : c)
+            : prevCustomers
+        );
+        return { success: true, message: "Customer updated successfully" };
+      } else {
+        return { success: false, message: "Failed to update customer" };
       }
     } catch (error) {
-      throw new Error("Failed to update customer");
+      return { success: false, message: "Failed to update customer" };
     }
   };
 
-  const deleteCustomer = async (id: number) => {
+  async function deleteCustomer(id: number): Promise<{ success: boolean, message: string }> {
     try {
       const res = await axiosInstance.delete(`/api/customers/${id}`);
-      if (res.status === 200) {
-        setData(data.filter((c) => c.id !== id));
+      if (res.status === 200 && res.data) {
+        setData(prevCustomers => prevCustomers?.filter(c => c.id !== res.data.id));
+        return { success: true, message: "Customer deleted successfully" };
+      } else {
+        return { success: false, message: "Failed to delete customer" };
       }
     } catch (error) {
-      throw new Error("Failed to delete customer");
+      return { success: false, message: "Failed to delete customer" };
     }
   };
 
   return {
     customers: data,
-    setCustomers: setData,
     isEmptyCustomers: isEmpty,
-    setIsEmptyCustomers: setIsEmpty,
     errorCustomers: error,
     loadingCustomers: loading,
     getCustomers: fetchData,

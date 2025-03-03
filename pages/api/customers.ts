@@ -22,14 +22,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }));
 
-    res.status(200).json(customers);
+    return res.status(200).json(customers);
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      res.status(error.response?.status || 500).json({
+      return res.status(error.response?.status || 500).json({
         error: "Failed to fetch customers"
       });
     } else {
-      res.status(500).json({ error: "Internal server error" });
+      return res.status(500).json({ error: "Internal server error" });
     }
   }
 }
