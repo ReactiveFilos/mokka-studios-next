@@ -1,65 +1,40 @@
-type DateUI = {
-  dayName: string;
-  monthDayYear: string;
+import { Customer } from "@/context/types/customer.type";
+import { Profile } from "@/context/types/profile.type";
+
+/**
+ * Maps DummyJSON user data to our Customer type
+ */
+export function mapToCustomer(user: any): Customer {
+  return {
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    phone: user.phone,
+    address: {
+      city: user.address?.city || "",
+      state: user.address?.state || "",
+      country: user.address?.country || ""
+    }
+  };
 }
 
-export const dateUtils = {
-  // returns YYYY-MM-DD
-  getCalendarDate(): string {
-    const now = Date.now();
-    const yearNumber = new Date(now).getFullYear();
-    const monthNumber = new Date(now).getMonth() + 1;
-    const dayNumber = new Date(now).getDate();
-    return `${yearNumber}-${monthNumber}-${dayNumber}`;
-  },
+/**
+ * Maps an array of DummyJSON users to our Customer type
+ */
+export function mapToCustomers(users: any[]): Customer[] {
+  return users.map(mapToCustomer);
+}
 
-  // For created_at timestamp - returns full ISO
-  getTimeStamp(): string {
-    const now = Date.now();
-    const result = new Date(now).toLocaleString("sv").replace(" ", "T");
-    return result;
-  },
-
-  // For UI clean date
-  formatDisplayDate(date: Date | string, month: "long" | "short" = "long"): DateUI {
-    const parsedDate = date instanceof Date ? date : new Date(date);
-    return {
-      dayName: parsedDate.toLocaleDateString("en-US", { weekday: "long" }),
-      monthDayYear: parsedDate.toLocaleDateString("en-US", {
-        month: month,
-        day: "numeric",
-        year: "numeric"
-      }),
-    };
-  },
-
-  formatDisplayTime(date: Date | string): string {
-    if (!date) return "";
-    const parsedDate = date instanceof Date ? date : new Date(date);
-    return parsedDate.toLocaleString("en-US", {
-      hour: "numeric",
-      minute: "numeric"
-    });
-  },
-
-  formatDisplayDateTime(date: Date | string): string {
-    if (!date) return "";
-    const parsedDate = date instanceof Date ? date : new Date(date);
-    const dayName = parsedDate.toLocaleDateString("en-US", { weekday: "long" });
-    const rest = parsedDate.toLocaleString("en-US", {
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-    });
-    return `${dayName} ${rest}`;
-  },
-
-  isSameDay(date1: string, date2: string): boolean {
-    const parsedDate1 = new Date(date1);
-    const parsedDate2 = new Date(date2);
-    return parsedDate1.getFullYear() === parsedDate2.getFullYear() &&
-      parsedDate1.getMonth() === parsedDate2.getMonth() &&
-      parsedDate1.getDate() === parsedDate2.getDate();
-  },
-};
+/**
+ * Maps DummyJSON user data to our Profile type
+ */
+export function mapToProfile(user: any): Profile {
+  return {
+    id: user.id,
+    fullname: `${user.firstName} ${user.lastName}`,
+    email: user.email,
+    username: user.username,
+    avatar: user.image || null,
+  };
+}

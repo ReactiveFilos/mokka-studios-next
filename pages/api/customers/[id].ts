@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+import { mapToCustomer } from "@/context/hooks/utils";
+
 import { createServerApiClient } from "@/lib/serverAxios";
 
 import axios from "axios";
@@ -24,8 +26,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           `/users/${id}`,
           req.body
         );
-        return res.status(200).json(mapCustomerData(updateResponse.data));
 
+        const updatedCustomer = mapToCustomer(updateResponse.data);
+        return res.status(200).json(updatedCustomer);
       case "DELETE":
         // Delete customer
         const deleteResponse = await serverAxios.delete(
@@ -44,20 +47,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     return res.status(500).json({ error: "Internal server error" });
   }
-}
-
-// Helper function to map the DummyJSON user format to our Customer type
-function mapCustomerData(user: any) {
-  return {
-    id: user.id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    email: user.email,
-    phone: user.phone,
-    address: {
-      city: user.address.city,
-      state: user.address.state,
-      country: user.address.country
-    }
-  };
 }

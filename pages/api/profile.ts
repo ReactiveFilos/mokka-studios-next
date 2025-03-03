@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { Profile } from "@/context/types/profile.type";
+import { mapToProfile } from "@/context/hooks/utils";
 
 import { createServerApiClient } from "@/lib/serverAxios";
 
@@ -23,20 +23,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Call DummyJSON auth endpoint to get user data
     const response = await serverAxios.get("/auth/me");
 
-    if (response.status === 200 && response.data) {
-      // Format response as a Profile
-      const profile: Profile = {
-        id: response.data.id,
-        fullname: response.data.firstName + " " + response.data.lastName,
-        email: response.data.email,
-        username: response.data.username,
-        avatar: response.data.image || null,
-      };
+    // Format response as a Profile
+    const profile = mapToProfile(response.data);
 
-      return res.status(200).json(profile);
-    } else {
-      return res.status(404).json({ error: "Profile not found" });
-    }
+    return res.status(200).json(profile);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // If token is invalid or expired

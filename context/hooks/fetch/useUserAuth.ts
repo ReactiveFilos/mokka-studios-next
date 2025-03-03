@@ -1,17 +1,17 @@
 import { useAuth } from "@/context/auth";
-import { useCache } from "@/context/caching";
+import { useNextToast } from "@/context/toast";
 import { Profile } from "@/context/types/profile.type";
 
 import axiosInstance from "@/lib/axiosInstance";
 
-type SignInProps = {
-  email: string,
+interface SignInProps {
   username: string,
   password: string
 }
 
-type SignUpProps = SignInProps & {
-  fullname: string
+interface SignUpProps extends SignInProps {
+  fullname: string,
+  email: string
 }
 
 type AuthResult = {
@@ -20,12 +20,12 @@ type AuthResult = {
 }
 
 export const useUserAuth = () => {
-  const { setProfile, setIsEmptyProfile } = useAuth();
-  const { setStoredUserProfile, clearStoredUserProfile } = useCache();
+  const { errorToast } = useNextToast();
+  const { setIsEmptyProfile } = useAuth();
 
-  async function signInWithEmailPassword({ email, username, password }: SignInProps): Promise<AuthResult> {
+  async function signInWithUsernamePassword({ username, password }: SignInProps): Promise<AuthResult> {
     try {
-      const res = await axiosInstance.post("/api/login", { email, username, password });
+      const res = await axiosInstance.post("/api/login", { username, password });
       if (res.status === 200 && res.data) {
         return { data: res.data, error: null };
       }
@@ -35,19 +35,23 @@ export const useUserAuth = () => {
     }
   }
 
-  async function signUpWithEmailPassword({ email, password, fullname }: SignUpProps) {
-    await setStoredUserProfile({ id: 1, email, fullname });
-    setProfile({ id: 1, email, fullname });
-    setIsEmptyProfile(false);
+  async function signUpWithEmailPassword({ fullname, username, email, password }: SignUpProps) {
+    /* Not supported by DummyJSON */
   }
 
   async function signOut() {
-    setIsEmptyProfile(true);
-    clearStoredUserProfile();
+    try {
+      const res = await axiosInstance.post("/api/logout");
+      if (res.status === 200) {
+        setIsEmptyProfile(true);
+      }
+    } catch (error) {
+      errorToast({ id: "sign-out", message: "Something went wrong" });
+    }
   }
 
   return {
-    signInWithEmailPassword,
+    signInWithUsernamePassword,
     signUpWithEmailPassword,
     signOut
   };

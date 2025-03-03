@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useAuth } from "@/context/auth";
-import { useCache } from "@/context/caching";
 import { useUserAuth } from "@/context/hooks/fetch/useUserAuth";
 
 import { Button } from "@/components/ui/button";
@@ -17,9 +16,6 @@ import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
 const formSchema = z.object({
-  email: z.string().email({
-    message: "Invalid email address.",
-  }),
   username: z.string().min(1, {
     message: "Username is empty.",
   }),
@@ -35,21 +31,18 @@ export default function LoginAuthForm() {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
       username: "",
       password: "",
     },
   });
 
-  const { setStoredUserProfile } = useCache();
-  const { signInWithEmailPassword } = useUserAuth();
+  const { signInWithUsernamePassword } = useUserAuth();
   const { setProfile, setIsEmptyProfile } = useAuth();
 
   async function onSubmit(values: FormSchema) {
-    const { email, username, password } = values;
-    const { data, error } = await signInWithEmailPassword({ email, username, password });
+    const { username, password } = values;
+    const { data, error } = await signInWithUsernamePassword({ username, password });
     if (data) {
-      setStoredUserProfile(data);
       setProfile(data);
       setIsEmptyProfile(false);
     } else if (error) {
@@ -63,19 +56,6 @@ export default function LoginAuthForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="email@example.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="username"

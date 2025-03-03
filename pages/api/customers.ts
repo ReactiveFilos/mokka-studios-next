@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+import { mapToCustomers } from "@/context/hooks/utils";
+
 import { createServerApiClient } from "@/lib/serverAxios";
 
 import axios from "axios";
@@ -14,18 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const response = await serverAxios.get("/users?limit=0");
 
     // Explicitly map the data
-    const customers = response.data.users.map((user: any) => ({
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      phone: user.phone,
-      address: {
-        city: user.address.city,
-        state: user.address.state,
-        country: user.address.country
-      }
-    }));
+    const customers = mapToCustomers(response.data.users);
 
     return res.status(200).json(customers);
   } catch (error) {

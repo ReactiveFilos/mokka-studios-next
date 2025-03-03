@@ -9,13 +9,13 @@ export const usePagesRouter = () => {
     router.push("/login");
   }, [router]);
 
-  const index = useCallback(() => {
-    router.push("/");
+  const customers = useCallback(() => {
+    router.push("/customers");
   }, [router]);
 
   const account = useCallback(() => {
     router.push("/account");
   }, [router]);
 
-  return { pagesRouter: { login, index, account } };
+  return { pagesRouter: { login, customers, account } };
 };
