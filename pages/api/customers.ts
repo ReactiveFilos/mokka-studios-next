@@ -1,12 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+import { createServerApiClient } from "@/lib/serverAxios";
+
 import axios from "axios";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") return res.status(405).json({ message: "Method not allowed" });
 
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users?limit=0`);
+    // Get the server API client with authentication headers
+    const serverAxios = createServerApiClient(req);
+
+    const response = await serverAxios.get("/users?limit=0");
 
     // Explicitly map the data
     const customers = response.data.users.map((user: any) => ({

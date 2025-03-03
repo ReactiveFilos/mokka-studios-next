@@ -20,6 +20,9 @@ const formSchema = z.object({
   email: z.string().email({
     message: "Invalid email address.",
   }),
+  username: z.string().min(1, {
+    message: "Username is empty.",
+  }),
   // Construction rules only in signup
   password: z.string().min(1, {
     message: "Password is empty.",
@@ -33,6 +36,7 @@ export default function LoginAuthForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
+      username: "",
       password: "",
     },
   });
@@ -42,8 +46,8 @@ export default function LoginAuthForm() {
   const { setProfile, setIsEmptyProfile } = useAuth();
 
   async function onSubmit(values: FormSchema) {
-    const { email, password } = values;
-    const { data, error } = await signInWithEmailPassword({ email, password });
+    const { email, username, password } = values;
+    const { data, error } = await signInWithEmailPassword({ email, username, password });
     if (data) {
       setStoredUserProfile(data);
       setProfile(data);
@@ -67,6 +71,19 @@ export default function LoginAuthForm() {
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input placeholder="email@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="username" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

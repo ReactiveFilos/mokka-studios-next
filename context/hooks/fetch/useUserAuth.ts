@@ -6,6 +6,7 @@ import axiosInstance from "@/lib/axiosInstance";
 
 type SignInProps = {
   email: string,
+  username: string,
   password: string
 }
 
@@ -22,9 +23,9 @@ export const useUserAuth = () => {
   const { setProfile, setIsEmptyProfile } = useAuth();
   const { setStoredUserProfile, clearStoredUserProfile } = useCache();
 
-  async function signInWithEmailPassword({ email, password }: SignInProps): Promise<AuthResult> {
+  async function signInWithEmailPassword({ email, username, password }: SignInProps): Promise<AuthResult> {
     try {
-      const res = await axiosInstance.post("/api/login", { email, password });
+      const res = await axiosInstance.post("/api/login", { email, username, password });
       if (res.status === 200 && res.data) {
         return { data: res.data, error: null };
       }

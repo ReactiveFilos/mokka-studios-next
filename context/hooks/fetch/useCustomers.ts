@@ -21,7 +21,7 @@ export const useCustomers = () => {
 
   const fetcher = useCallback(getCustomers, []);
   const {
-    data, setData, isEmpty, setIsEmpty, error, loading, fetchData
+    data, setData, isEmpty, error, loading, fetchData
   } = useDataFetcher<Customer[]>(fetcher);
 
   async function updateCustomer(customer: Customer): Promise<{ success: boolean, message: string }> {

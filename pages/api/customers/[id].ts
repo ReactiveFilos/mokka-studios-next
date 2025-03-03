@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+import { createServerApiClient } from "@/lib/serverAxios";
+
 import axios from "axios";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -10,23 +12,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // Get the server API client with authentication headers
+    const serverAxios = createServerApiClient(req);
+
     // Handle different HTTP methods
     switch (req.method) {
       case "PUT":
       case "PATCH":
         // Update customer
-        const updateResponse = await axios.put(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/${id}`,
-          req.body,
-          {
-            headers: { "Content-Type": "application/json" }
-          }
+        const updateResponse = await serverAxios.put(
+          `/users/${id}`,
+          req.body
         );
         return res.status(200).json(mapCustomerData(updateResponse.data));
 
       case "DELETE":
         // Delete customer
-        const deleteResponse = await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/users/${id}`);
+        const deleteResponse = await serverAxios.delete(
+          `/users/${id}`
+        );
         return res.status(200).json({ id: Number(deleteResponse.data.id) });
 
       default:
