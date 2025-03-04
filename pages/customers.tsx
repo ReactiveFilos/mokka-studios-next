@@ -23,7 +23,8 @@ export default function Customers() {
     loadingCustomers,
     getCustomers,
     updateCustomer,
-    deleteCustomer
+    deleteCustomer,
+    createCustomer
   } = usePlatform();
 
   useEffect(() => {
@@ -48,10 +49,16 @@ export default function Customers() {
     }
   }, [deleteCustomer]);
 
-  const handleAddCustomer = useCallback(async () => {
-
-    return true;
-  }, []);
+  const handleCreateCustomer = useCallback(async (customer: Omit<Customer, "id">) => {
+    console.log("Creating customer", customer);
+    // Using the length of the current customers array as the ID (DummyJSON can't give us what we need)
+    const { success, message } = await createCustomer(customer, customers.length + 1);
+    if (success) {
+      successToast({ id: "CustomerCreate", message });
+    } else {
+      errorToast({ id: "CustomerCreate", message });
+    }
+  }, [createCustomer, customers]);
 
   const columns = useMemo(() => createStandardColumns<Customer>(
     [
@@ -104,12 +111,12 @@ export default function Customers() {
         filterableFields={filterableFields}
         entityType="customer"
         tableActions={{
-          onAdd: handleAddCustomer,
+          onAdd: handleCreateCustomer,
           addButtonLabel: "Add Customer"
         }}
       />
     );
-  }, [customers, isEmptyCustomers, errorCustomers, loadingCustomers, handleEdit, handleDelete]);
+  }, [customers, isEmptyCustomers, errorCustomers, loadingCustomers, columns, handleCreateCustomer]);
 
   return (
     <AppDiv width100 flexLayout="flexColumnStartLeft" gap="1.75rem">

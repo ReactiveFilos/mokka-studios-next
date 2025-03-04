@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import AppDiv from "@/components/app/AppDiv";
 import { BasicDataTable } from "@/components/table/basic-data-table";
 import { DataTableToolbar } from "@/components/table/data-table-toolbar";
-import { EntityType, FilterableField, FilterType } from "@/components/table/types";
+import { EntityType, FilterableField, FilterType, TableActions } from "@/components/table/types";
 
 import {
   ColumnDef,
@@ -20,11 +20,8 @@ interface DataTableProps<TData> {
   isLoading: boolean;
   filterableFields?: FilterableField[];
   initialPageSize?: number;
-  entityType: EntityType; // Use the proper type
-  tableActions?: {
-    onAdd?: () => void;
-    addButtonLabel?: string;
-  };
+  entityType: EntityType;
+  tableActions?: TableActions<TData>;
 }
 
 export function DataTable<TData>({
@@ -96,8 +93,7 @@ export function DataTable<TData>({
         filterFields={filterableFields}
         onFiltersChange={handleFiltersChange}
         entityType={entityType}
-        onAdd={tableActions?.onAdd}
-        addButtonLabel={tableActions?.addButtonLabel}
+        tableActions={tableActions}
       />
       <BasicDataTable
         table={table}

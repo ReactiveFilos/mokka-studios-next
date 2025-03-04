@@ -58,6 +58,20 @@ export const useCustomers = () => {
     }
   };
 
+  async function createCustomer(customer: Omit<Customer, "id">, id: number): Promise<{ success: boolean, message: string }> {
+    try {
+      const res = await axiosInstance.post("/api/customers", customer);
+      if (res.status === 201 && res.data) {
+        setData(prevCustomers => prevCustomers ? [...prevCustomers, { ...res.data, id }] : [res.data]);
+        return { success: true, message: "Customer added successfully" };
+      } else {
+        return { success: false, message: "Failed to add customer" };
+      }
+    } catch (error) {
+      return { success: false, message: "Failed to add customer" };
+    }
+  };
+
   return {
     customers: data,
     isEmptyCustomers: isEmpty,
@@ -65,6 +79,7 @@ export const useCustomers = () => {
     loadingCustomers: loading,
     getCustomers: fetchData,
     updateCustomer,
-    deleteCustomer
+    deleteCustomer,
+    createCustomer
   };
 };

@@ -1,33 +1,28 @@
 import { useState } from "react";
 
-import { FilterableField, FilterType } from "./types";
-
 import { AddDialog } from "@/components/table/data-table-dialog";
 import DataTableSearch from "@/components/table/data-table-search";
-import { EntityType, STANDARD_ACTIONS } from "@/components/table/types";
+import { EntityType, FilterableField, FilterType, STANDARD_ACTIONS, TableActions } from "@/components/table/types";
 import { Button } from "@/components/ui/button";
 
 interface DataTableToolbarProps<TData> {
   filterFields?: FilterableField[];
   onFiltersChange: (filters: FilterType[]) => void;
   entityType: EntityType;
-  onAdd?: () => void;
-  addButtonLabel?: string;
+  tableActions?: TableActions<TData>;
 }
 
 export function DataTableToolbar<TData>({
   filterFields = [],
   onFiltersChange,
   entityType,
-  onAdd,
-  addButtonLabel
+  tableActions: { onAdd, addButtonLabel } = {},
 }: DataTableToolbarProps<TData>) {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState<boolean>(false);
 
-  // TODO
-  const handleAdd = (data: any) => {
+  const handleAdd = (data: Omit<TData, "id">) => {
     if (onAdd) {
-      // Close the dialog - the actual implementation will happen at the consumer level
+      onAdd(data);
       setIsAddDialogOpen(false);
     }
   };

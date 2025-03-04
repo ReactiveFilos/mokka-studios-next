@@ -20,6 +20,11 @@ export interface TableOptions<T> {
   };
 }
 
+export interface TableActions<T = any> {
+  onAdd?: (data: Omit<T, "id">) => void | Promise<void>;
+  addButtonLabel?: string;
+}
+
 // Type definitions
 export type EntityType = "customer" | "product";
 export type ActionType = "edit" | "delete" | "add";
@@ -64,8 +69,8 @@ export interface DeleteDialogProps<T> extends BaseDialogProps {
   onConfirm: () => void;
 }
 
-export interface AddDialogProps extends BaseDialogProps {
-  onSave: (data: any) => void;
+export interface AddDialogProps<T> extends BaseDialogProps {
+  onSave: (data: Omit<T, "id">) => void;
 }
 
 export interface PreviewDialogProps<T> extends BaseDialogProps {

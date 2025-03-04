@@ -30,7 +30,7 @@ interface EntityRenderer<T = any> {
   /**
    * Renders the add form for this entity
    */
-  addFormRenderer?: (data: Partial<T>, onInputChange: (key: string, value: any) => void) => React.ReactNode;
+  addFormRenderer?: (data: Omit<T, "id">, onInputChange: (key: string, value: any) => void) => React.ReactNode;
 
   /**
    * Handle special nested field changes (like address)
@@ -40,7 +40,7 @@ interface EntityRenderer<T = any> {
   /**
    * Get initial form data for add operation
    */
-  getInitialFormData?: () => Partial<T>;
+  getInitialFormData?: () => Omit<T, "id">;
 
   /**
    * Validate form before submission
@@ -175,14 +175,13 @@ export function EditDialog<T>({
 /**
  * Add dialog component
  */
-export function AddDialog({
+export function AddDialog<T>({
   open,
   onOpenChange,
   onSave,
   entityType
-}: AddDialogProps) {
-  // Use a properly typed state with Record<string, any>
-  const [formData, setFormData] = useState<Record<string, any>>({});
+}: AddDialogProps<T>) {
+  const [formData, setFormData] = useState<Omit<T, "id">>({} as Omit<T, "id">);
 
   // Get the renderer directly by entity type
   const renderer = entityRenderers.get(entityType);
@@ -198,7 +197,7 @@ export function AddDialog({
     }
 
     // Regular field update - explicitly type the previous state
-    setFormData((prev: Record<string, any>) => ({
+    setFormData((prev: Omit<T, "id">) => ({
       ...prev,
       [key]: value
     }));
