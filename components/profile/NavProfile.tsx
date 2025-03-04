@@ -4,7 +4,7 @@ import { Profile } from "@/context/types/profile.type";
 
 import AppIcon from "@/components/app/AppIcon";
 import AppText from "@/components/app/AppText";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,6 +45,7 @@ export function NavProfile({
               className="width100 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               style={{ gap: "0.78125rem" }}>
               <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage src={profile.avatar} alt={initial} />
                 <AvatarFallback className="rounded-lg">{initial}</AvatarFallback>
               </Avatar>
               <AppText size="mid" weight="lightBold">{profile.fullname}</AppText>
@@ -60,6 +61,7 @@ export function NavProfile({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
+                  <AvatarImage src={profile.avatar} alt={initial} />
                   <AvatarFallback className="rounded-lg">{initial}</AvatarFallback>
                 </Avatar>
                 <AppText size="mid" weight="lightBold">{profile.fullname}</AppText>

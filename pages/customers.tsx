@@ -48,6 +48,11 @@ export default function Customers() {
     }
   }, [deleteCustomer]);
 
+  const handleAddCustomer = useCallback(async () => {
+
+    return true;
+  }, []);
+
   const columns = useMemo(() => createStandardColumns<Customer>(
     [
       { accessorKey: "id", header: "ID" },
@@ -61,7 +66,8 @@ export default function Customers() {
         cell: info => {
           const address = info.getValue();
           return `${address.city}, ${address.state}, ${address.country}`;
-        }
+        },
+        meta: { disableSorting: true },
       },
     ],
     {
@@ -70,7 +76,7 @@ export default function Customers() {
       actions: {
         onEdit: handleEdit,
         onDelete: handleDelete
-      }
+      },
     }
   ), [handleEdit, handleDelete]);
 
@@ -80,6 +86,7 @@ export default function Customers() {
     { value: "email", label: "Email", icon: Mail },
     { value: "phone", label: "Phone", icon: Phone },
     { value: "address.city", label: "City", icon: MapPin },
+    { value: "address.state", label: "State", icon: MapPin },
     { value: "address.country", label: "Country", icon: MapPin },
   ];
 
@@ -95,6 +102,11 @@ export default function Customers() {
         columns={columns}
         isLoading={loadingCustomers}
         filterableFields={filterableFields}
+        entityType="customer"
+        tableActions={{
+          onAdd: handleAddCustomer,
+          addButtonLabel: "Add Customer"
+        }}
       />
     );
   }, [customers, isEmptyCustomers, errorCustomers, loadingCustomers, handleEdit, handleDelete]);

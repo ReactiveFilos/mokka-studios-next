@@ -1,6 +1,6 @@
 import { ComponentType } from "react";
 
-import { LucideIcon, Pencil, Trash2 } from "lucide-react";
+import { LucideIcon, Pencil, Plus, Trash2 } from "lucide-react";
 
 // Column configuration
 export interface ColumnConfig<T> {
@@ -22,7 +22,7 @@ export interface TableOptions<T> {
 
 // Type definitions
 export type EntityType = "customer" | "product";
-export type ActionType = "edit" | "delete";
+export type ActionType = "edit" | "delete" | "add";
 
 export interface FilterableField {
   value: string;
@@ -44,6 +44,7 @@ export const STANDARD_ACTIONS: Record<ActionType, {
 }> = {
   "edit": { label: "Edit", icon: Pencil },
   "delete": { label: "Delete", icon: Trash2 },
+  "add": { label: "Add", icon: Plus },
 };
 
 // Dialog props
@@ -61,6 +62,10 @@ export interface EditDialogProps<T> extends BaseDialogProps {
 export interface DeleteDialogProps<T> extends BaseDialogProps {
   data: T;
   onConfirm: () => void;
+}
+
+export interface AddDialogProps extends BaseDialogProps {
+  onSave: (data: any) => void;
 }
 
 export interface PreviewDialogProps<T> extends BaseDialogProps {

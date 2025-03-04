@@ -2,10 +2,17 @@ import { useMemo, useState } from "react";
 
 import AppDiv from "@/components/app/AppDiv";
 import { BasicDataTable } from "@/components/table/basic-data-table";
-import DataTableSearch from "@/components/table/data-table-search";
-import { FilterableField, FilterType } from "@/components/table/types";
+import { DataTableToolbar } from "@/components/table/data-table-toolbar";
+import { EntityType, FilterableField, FilterType } from "@/components/table/types";
 
-import { ColumnDef, getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable
+} from "@tanstack/react-table";
 
 interface DataTableProps<TData> {
   data: TData[];
@@ -13,6 +20,11 @@ interface DataTableProps<TData> {
   isLoading: boolean;
   filterableFields?: FilterableField[];
   initialPageSize?: number;
+  entityType: EntityType; // Use the proper type
+  tableActions?: {
+    onAdd?: () => void;
+    addButtonLabel?: string;
+  };
 }
 
 export function DataTable<TData>({
@@ -21,12 +33,15 @@ export function DataTable<TData>({
   isLoading,
   filterableFields = [],
   initialPageSize = 20,
+  entityType,
+  tableActions,
 }: DataTableProps<TData>) {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: initialPageSize,
   });
 
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [filters, setFilters] = useState<FilterType[]>([]);
 
   // Apply filters to the data
@@ -59,8 +74,11 @@ export function DataTable<TData>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
     state: {
       pagination,
+      sorting,
     },
     onPaginationChange: setPagination,
     manualPagination: false,
@@ -74,14 +92,13 @@ export function DataTable<TData>({
 
   return (
     <AppDiv width100 flexLayout="flexColumnStartLeft" gap="1.75rem">
-      {filterableFields.length > 0 && (
-        <div className="w-full">
-          <DataTableSearch
-            filterFields={filterableFields}
-            onFiltersChange={handleFiltersChange}
-          />
-        </div>
-      )}
+      <DataTableToolbar
+        filterFields={filterableFields}
+        onFiltersChange={handleFiltersChange}
+        entityType={entityType}
+        onAdd={tableActions?.onAdd}
+        addButtonLabel={tableActions?.addButtonLabel}
+      />
       <BasicDataTable
         table={table}
         isLoading={isLoading}
