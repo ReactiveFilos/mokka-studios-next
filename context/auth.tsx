@@ -72,9 +72,9 @@ const AuthProvider = ({ children }: ProviderProps) => {
     }
   }, [profile, isEmptyProfile, loadingProfile, isAuthRoute]);
 
-  useEffect(() => {
-    if (isInitialViewReady && isAuthRoute) handleChangeColorScheme("light");
-  }, [isInitialViewReady, isAuthRoute]);
+  // useEffect(() => {
+  //   if (isInitialViewReady && isAuthRoute) handleChangeColorScheme("light");
+  // }, [isInitialViewReady, isAuthRoute]);
 
   const contextValues: ContextProps = useMemo(() => ({
     isInitialViewReady,

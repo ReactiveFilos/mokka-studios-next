@@ -50,7 +50,6 @@ export default function Customers() {
   }, [deleteCustomer]);
 
   const handleCreateCustomer = useCallback(async (customer: Omit<Customer, "id">) => {
-    console.log("Creating customer", customer);
     // Using the length of the current customers array as the ID (DummyJSON can't give us what we need)
     const { success, message } = await createCustomer(customer, customers.length + 1);
     if (success) {
