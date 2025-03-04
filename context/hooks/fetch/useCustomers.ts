@@ -26,6 +26,16 @@ export const useCustomers = () => {
 
   async function updateCustomer(customer: Customer): Promise<{ success: boolean, message: string }> {
     try {
+      // Find if customer is local (demo purposes, as DummyJSON wouldn't support it)
+      if (customer.isLocal) {
+        setData(prevCustomers =>
+          prevCustomers
+            ? prevCustomers.map(c => c.id === customer.id ? customer : c)
+            : prevCustomers
+        );
+        return { success: true, message: "Customer updated successfully" };
+      }
+      // Otherwise make API call
       const res = await axiosInstance.put(`/api/customers/${customer.id}`, customer);
       if (res.status === 200 && res.data) {
         const updatedCustomer = res.data;
@@ -44,9 +54,15 @@ export const useCustomers = () => {
     }
   };
 
-  async function deleteCustomer(id: number): Promise<{ success: boolean, message: string }> {
+  async function deleteCustomer(customer: Customer): Promise<{ success: boolean, message: string }> {
     try {
-      const res = await axiosInstance.delete(`/api/customers/${id}`);
+      // Find if customer is local (demo purposes, as DummyJSON wouldn't support it)
+      if (customer.isLocal) {
+        setData(prevCustomers => prevCustomers?.filter(c => c.id !== customer.id));
+        return { success: true, message: "Customer deleted successfully" };
+      }
+      // Otherwise make API call
+      const res = await axiosInstance.delete(`/api/customers/${customer.id}`);
       if (res.status === 200 && res.data) {
         setData(prevCustomers => prevCustomers?.filter(c => c.id !== res.data.id));
         return { success: true, message: "Customer deleted successfully" };
@@ -62,7 +78,9 @@ export const useCustomers = () => {
     try {
       const res = await axiosInstance.post("/api/customers", customer);
       if (res.status === 201 && res.data) {
-        setData(prevCustomers => prevCustomers ? [...prevCustomers, { ...res.data, id }] : [res.data]);
+        // Mark as locally created customer 
+        const newCustomer = { ...res.data, id, isLocal: true };
+        setData(prevCustomers => prevCustomers ? [...prevCustomers, newCustomer] : [res.data]);
         return { success: true, message: "Customer added successfully" };
       } else {
         return { success: false, message: "Failed to add customer" };

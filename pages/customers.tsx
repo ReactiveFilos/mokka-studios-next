@@ -41,7 +41,7 @@ export default function Customers() {
   }, [updateCustomer]);
 
   const handleDelete = useCallback(async (customer: Customer) => {
-    const { success, message } = await deleteCustomer(customer.id);
+    const { success, message } = await deleteCustomer(customer);
     if (success) {
       successToast({ id: "CustomerDelete", message });
     } else {
@@ -50,7 +50,7 @@ export default function Customers() {
   }, [deleteCustomer]);
 
   const handleCreateCustomer = useCallback(async (customer: Omit<Customer, "id">) => {
-    // Using the length of the current customers array as the ID (DummyJSON can't give us what we need)
+    // Using the length of the current customers array as the ID (demo purposes, DummyJSON can't give us what we need)
     const { success, message } = await createCustomer(customer, customers.length + 1);
     if (success) {
       successToast({ id: "CustomerCreate", message });

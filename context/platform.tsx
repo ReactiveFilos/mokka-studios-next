@@ -12,7 +12,7 @@ type ContextProps = {
   loadingCustomers: boolean;
   getCustomers: () => Promise<void>;
   updateCustomer: (customer: Customer) => Promise<{ success: boolean, message: string }>;
-  deleteCustomer: (id: number) => Promise<{ success: boolean, message: string }>;
+  deleteCustomer: (customer: Customer) => Promise<{ success: boolean, message: string }>;
   createCustomer: (customer: Omit<Customer, "id">, id: number) => Promise<{ success: boolean, message: string }>;
 
 };

@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { mapToCustomer } from "@/context/hooks/utils";
+import { mapToCustomer } from "@/context/types/customer.type";
 
 import { createServerApiClient } from "@/lib/serverAxios";
 

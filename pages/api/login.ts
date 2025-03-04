@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { mapToProfile } from "@/context/hooks/utils";
+import { mapToProfile } from "@/context/types/profile.type";
 
 import { createServerApiClient } from "@/lib/serverAxios";
 
