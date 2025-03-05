@@ -50,8 +50,12 @@ export default function Customers() {
   }, [deleteCustomer]);
 
   const handleCreateCustomer = useCallback(async (customer: Omit<Customer, "id">) => {
-    // Using the length of the current customers array as the ID (demo purposes, DummyJSON can't give us what we need)
-    const { success, message } = await createCustomer(customer, customers.length + 1);
+    /**
+     * Find the highest ID in the customers array and increment by 1
+     * DEMO PURPOSES ONLY, DummyJSON can't give us what we need
+     */
+    const newCustomerId = customers.length > 0 ? Math.max(...customers.map(c => c.id)) + 1 : 1;
+    const { success, message } = await createCustomer(customer, newCustomerId);
     if (success) {
       successToast({ id: "CustomerCreate", message });
     } else {

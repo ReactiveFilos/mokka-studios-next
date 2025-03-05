@@ -80,7 +80,7 @@ export const useCustomers = () => {
       if (res.status === 201 && res.data) {
         // Mark as locally created customer 
         const newCustomer = { ...res.data, id, isLocal: true };
-        setData(prevCustomers => prevCustomers ? [...prevCustomers, newCustomer] : [res.data]);
+        setData(prevCustomers => prevCustomers ? [...prevCustomers, newCustomer] : [newCustomer]);
         return { success: true, message: "Customer added successfully" };
       } else {
         return { success: false, message: "Failed to add customer" };
