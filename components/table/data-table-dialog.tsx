@@ -163,7 +163,7 @@ export function EditDialog<T>({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={() => onSave(formData)}>
+          <Button onClick={() => onSave(formData)} disabled={renderer === undefined || !renderer.validateForm?.(formData)}>
             Save changes
           </Button>
         </DialogFooter>

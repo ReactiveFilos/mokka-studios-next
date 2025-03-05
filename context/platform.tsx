@@ -24,9 +24,9 @@ type ContextProps = {
   errorProducts: string | null;
   loadingProducts: boolean;
   getProducts: () => Promise<void>;
-  updateProduct: (categoryId: Pick<Category, "id">, product: Product) => Promise<{ success: boolean, message: string }>;
+  updateProduct: (categoryId: Category["id"], product: Product) => Promise<{ success: boolean, message: string }>;
   deleteProduct: (product: Product) => Promise<{ success: boolean, message: string }>;
-  createProduct: (categoryId: Pick<Category, "id">, product: Omit<Product, "id">, id: number) => Promise<{ success: boolean, message: string }>;
+  createProduct: (categoryId: Category["id"], product: Omit<Product, "id">, id: number) => Promise<{ success: boolean, message: string }>;
 
   categories: Category[] | null;
   isEmptyCategories: boolean;

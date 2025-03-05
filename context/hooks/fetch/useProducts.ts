@@ -25,7 +25,7 @@ export const useProducts = () => {
     data, setData, isEmpty, error, loading, fetchData
   } = useDataFetcher<Product[]>(fetcher);
 
-  async function updateProduct(categoryId: Pick<Category, "id">, product: Product): Promise<{ success: boolean, message: string }> {
+  async function updateProduct(categoryId: Category["id"], product: Product): Promise<{ success: boolean, message: string }> {
     try {
       // Find if product is local (demo purposes, as DummyJSON wouldn't support it)
       if (product.isLocal) {
@@ -75,7 +75,7 @@ export const useProducts = () => {
     }
   };
 
-  async function createProduct(categoryId: Pick<Category, "id">, product: Omit<Product, "id">, id: number): Promise<{ success: boolean, message: string }> {
+  async function createProduct(categoryId: Category["id"], product: Omit<Product, "id">, id: number): Promise<{ success: boolean, message: string }> {
     try {
       const res = await axiosInstance.post("/api/products", { ...product, categoryId });
       if (res.status === 201 && res.data) {

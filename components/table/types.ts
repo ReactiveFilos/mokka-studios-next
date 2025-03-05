@@ -26,7 +26,7 @@ export interface TableActions<T = any> {
 }
 
 // Type definitions
-export type EntityType = "customer" | "product";
+export type EntityType = "customer" | "product" | "category";
 export type ActionType = "edit" | "delete" | "add";
 
 export interface FilterableField {
