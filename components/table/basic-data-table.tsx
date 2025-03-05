@@ -28,7 +28,7 @@ export function BasicDataTable<TData>({
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="font-semibold whitespace-nowrap px-4">
+                      className="font-semibold whitespace-nowrap px-4 text-left">
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
@@ -54,7 +54,7 @@ export function BasicDataTable<TData>({
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className="overflow-hidden text-ellipsis whitespace-nowrap px-4">
+                        className="px-4 text-left">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}

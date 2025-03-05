@@ -8,6 +8,7 @@ import { Product } from "@/context/types/product.type";
 
 import AppDiv from "@/components/app/AppDiv";
 import AppText from "@/components/app/AppText";
+import { TruncatedTextWithHover } from "@/components/elements/TruncatedTextWithHover";
 import { DataTable } from "@/components/table/data-table";
 import { createStandardColumns } from "@/components/table/data-table-columns-factory";
 import { Badge } from "@/components/ui/badge";
@@ -84,6 +85,7 @@ export default function Products() {
       {
         accessorKey: "description",
         header: "Description",
+        cell: info => <TruncatedTextWithHover text={info.getValue()} maxLength={80} />,
       },
       {
         accessorKey: "categoryId",
@@ -93,7 +95,7 @@ export default function Products() {
       {
         accessorKey: "price",
         header: "Price",
-        cell: info => `${info.getValue().toLocaleString("it-IT", {
+        cell: info => `${info.getValue()?.toLocaleString("it-IT", {
           style: "currency",
           currency: "EUR",
         })}`,
@@ -105,7 +107,7 @@ export default function Products() {
           const tags = info.getValue() as string[];
           return (
             <div className="flex flex-wrap gap-1">
-              {tags.map(tag => (
+              {tags && tags.map(tag => (
                 <Badge key={tag} variant="secondary" className="mr-1">
                   {tag}
                 </Badge>

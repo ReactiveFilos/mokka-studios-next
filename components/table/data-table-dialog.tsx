@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 
+import { usePlatform } from "@/context/platform";
+import { Category } from "@/context/types/category.type";
 import { Customer } from "@/context/types/customer.type";
+import { Product } from "@/context/types/product.type";
 
 import { AddDialogProps, DeleteDialogProps, EditDialogProps, EntityType } from "@/components/table/types";
 import { Button } from "@/components/ui/button";
@@ -14,6 +17,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 // Entity renderer interfaces
 interface EntityRenderer<T = any> {
@@ -486,5 +491,340 @@ registerEntity<Customer>("customer", {
   // Form validation
   validateForm: (data) => {
     return !!(data.firstName && data.lastName && data.email && data.phone && data.address.city && data.address.state && data.address.country);
+  }
+});
+
+/**
+ * Register the Product entity renderer
+ */
+registerEntity<Product>("product", {
+  deleteInfoRenderer: (data) => (
+    <div className="mt-2 mb-4 p-4 border rounded-md bg-muted/50">
+      <div className="grid gap-3">
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-right font-medium text-muted-foreground">
+            Title
+          </Label>
+          <span className="col-span-3 truncate">
+            {data.title}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-right font-medium text-muted-foreground">
+            Description
+          </Label>
+          <span className="col-span-3 truncate">
+            {data.description}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-right font-medium text-muted-foreground">
+            Price
+          </Label>
+          <span className="col-span-3 truncate">
+            {data.price}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label className="text-right font-medium text-muted-foreground">
+            Tags
+          </Label>
+          <span className="col-span-3 truncate">
+            {data.tags?.join(", ")}
+          </span>
+        </div>
+      </div>
+    </div>
+  ),
+
+  editFormRenderer: (data, onInputChange) => {
+    const { categories } = usePlatform();
+
+    return (
+      <div className="grid gap-4 py-4">
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="title" className="text-right">
+            Title
+          </Label>
+          <Input
+            id="title"
+            value={data.title || ""}
+            onChange={(e) => onInputChange("title", e.target.value)}
+            className="col-span-3"
+          />
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="description" className="text-right">
+            Description
+          </Label>
+          <Textarea
+            id="description"
+            value={data.description || ""}
+            onChange={(e) => onInputChange("description", e.target.value)}
+            className="col-span-3"
+          />
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="price" className="text-right">
+            Price
+          </Label>
+          <Input
+            id="price"
+            type="number"
+            step="0.01"
+            value={data.price || ""}
+            onChange={(e) => onInputChange("price", parseFloat(e.target.value))}
+            className="col-span-3"
+          />
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="categoryId" className="text-right">
+            Category
+          </Label>
+          <Select
+            value={data.categoryId?.toString()}
+            onValueChange={(value) => onInputChange("categoryId", parseInt(value))}>
+            <SelectTrigger className="col-span-3">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories?.map(category => (
+                <SelectItem key={category.id} value={category.id.toString()}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="image" className="text-right">
+            Image URL
+          </Label>
+          <Input
+            id="image"
+            value={data.image || ""}
+            onChange={(e) => onInputChange("image", e.target.value)}
+            className="col-span-3"
+          />
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="tags" className="text-right">
+            Tags
+          </Label>
+          <Input
+            id="tags"
+            value={data.tags?.join(", ") || ""}
+            onChange={(e) => onInputChange("tags", e.target.value.split(",").map(tag => tag.trim()).filter(Boolean))}
+            placeholder="Enter tags separated by commas"
+            className="col-span-3"
+          />
+        </div>
+      </div>
+    );
+  },
+
+  addFormRenderer: (data, onInputChange) => {
+    // Get categories from context for the select dropdown
+    const { categories } = usePlatform();
+
+    return (
+      <div className="grid gap-4 py-4">
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="title" className="text-right">
+            Title
+          </Label>
+          <Input
+            id="title"
+            value={data.title || ""}
+            onChange={(e) => onInputChange("title", e.target.value)}
+            className="col-span-3"
+          />
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="description" className="text-right">
+            Description
+          </Label>
+          <Textarea
+            id="description"
+            value={data.description || ""}
+            onChange={(e) => onInputChange("description", e.target.value)}
+            className="col-span-3"
+          />
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="price" className="text-right">
+            Price
+          </Label>
+          <Input
+            id="price"
+            type="number"
+            step="0.01"
+            value={data.price || ""}
+            onChange={(e) => onInputChange("price", parseFloat(e.target.value))}
+            className="col-span-3"
+          />
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="categoryId" className="text-right">
+            Category
+          </Label>
+          <Select
+            value={data.categoryId?.toString()}
+            onValueChange={(value) => onInputChange("categoryId", parseInt(value))}>
+            <SelectTrigger className="col-span-3">
+              <SelectValue placeholder="Select category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories?.map(category => (
+                <SelectItem key={category.id} value={category.id.toString()}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="image" className="text-right">
+            Image URL
+          </Label>
+          <Input
+            id="image"
+            value={data.image || ""}
+            onChange={(e) => onInputChange("image", e.target.value)}
+            className="col-span-3"
+          />
+        </div>
+
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="tags" className="text-right">
+            Tags
+          </Label>
+          <Input
+            id="tags"
+            value={data.tags}
+            onChange={(e) => onInputChange("tags", e.target.value.split(", ").map(tag => tag.trim()).filter(Boolean))}
+            placeholder="Enter tags separated by commas"
+            className="col-span-3"
+          />
+        </div>
+      </div>
+    );
+  },
+
+  getInitialFormData: () => ({
+    title: "",
+    description: "",
+    categoryId: 0,
+    price: 0,
+    image: "",
+    tags: []
+  }),
+
+  validateForm: (data) => {
+    return !!(data.title && data.description && data.categoryId && data.price > 0);
+  }
+});
+
+/**
+ * Register the Category entity renderer
+ */
+registerEntity<Category>("category", {
+  deleteInfoRenderer: (data) => (
+    <div className="grid gap-4">
+      <p>Are you sure you want to delete this category?</p>
+      <div className="grid grid-cols-4 items-center gap-2">
+        <span className="text-right font-medium">ID:</span>
+        <span className="col-span-3">{data.id}</span>
+      </div>
+      <div className="grid grid-cols-4 items-center gap-2">
+        <span className="text-right font-medium">Name:</span>
+        <span className="col-span-3">{data.name}</span>
+      </div>
+      <div className="grid grid-cols-4 items-center gap-2">
+        <span className="text-right font-medium">Identifier:</span>
+        <span className="col-span-3">{data.slug}</span>
+      </div>
+      <p className="text-sm text-muted-foreground mt-2">
+        This action cannot be undone.
+      </p>
+    </div>
+  ),
+
+  editFormRenderer: (data, onInputChange) => (
+    <div className="grid gap-4 py-4">
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="name" className="text-right">
+          Name
+        </Label>
+        <Input
+          id="name"
+          value={data.name || ""}
+          onChange={(e) => onInputChange("name", e.target.value)}
+          className="col-span-3"
+        />
+      </div>
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="slug" className="text-right">
+          Identifier
+        </Label>
+        <Input
+          id="slug"
+          value={data.slug || ""}
+          onChange={(e) => onInputChange("slug", e.target.value)}
+          className="col-span-3"
+        />
+      </div>
+    </div>
+  ),
+
+  addFormRenderer: (data, onInputChange) => (
+    <div className="grid gap-4 py-4">
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="name" className="text-right">
+          Name
+        </Label>
+        <Input
+          id="name"
+          value={data.name || ""}
+          onChange={(e) => onInputChange("name", e.target.value)}
+          className="col-span-3"
+        />
+      </div>
+      <div className="grid grid-cols-4 items-center gap-4">
+        <Label htmlFor="slug" className="text-right">
+          Identifier
+        </Label>
+        <Input
+          id="slug"
+          value={data.slug || ""}
+          onChange={(e) => onInputChange("slug", e.target.value)}
+          className="col-span-3"
+        />
+      </div>
+      <div className="col-span-4 text-sm text-muted-foreground">
+        <p>Identifier should be URL-friendly (e.g. &quot;sports-gear&quot; for &quot;Sports Gear&quot;).</p>
+      </div>
+    </div>
+  ),
+
+  getInitialFormData: () => ({
+    name: "",
+    slug: ""
+  }),
+
+  validateForm: (data) => {
+    return !!(data.name && data.slug);
   }
 });

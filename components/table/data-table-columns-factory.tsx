@@ -33,14 +33,16 @@ export function createStandardColumns<T extends Record<string, any>>(
         id: "actions",
         header: "",
         cell: ({ row }) => (
-          <RowActions
-            data={row.original}
-            entityType={options.entityType}
-            actions={{
-              onEdit: options.actions?.onEdit,
-              onDelete: options.actions?.onDelete,
-            }}
-          />
+          <div className="flex justify-end">
+            <RowActions
+              data={row.original}
+              entityType={options.entityType}
+              actions={{
+                onEdit: options.actions?.onEdit,
+                onDelete: options.actions?.onDelete,
+              }}
+            />
+          </div>
         ),
         enableSorting: false,
       })
