@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 
 import SideBarRootLayout from "@/layout/SideBarRootLayout";
 
-import { usePlatform } from "@/context/platform";
+import { useCustomersContext } from "@/context/platform";
 import { useNextToast } from "@/context/toast";
 import { Customer } from "@/context/types/customer.type";
 
@@ -26,7 +26,7 @@ export default function Customers() {
     updateCustomer,
     deleteCustomer,
     createCustomer
-  } = usePlatform();
+  } = useCustomersContext();
 
   useEffect(() => {
     if (loadingCustomers) getCustomers();

@@ -7,9 +7,7 @@ import { Category } from "@/context/types/category.type";
 import { Customer } from "@/context/types/customer.type";
 import { Product } from "@/context/types/product.type";
 
-type ContextProps = {
-  previousRoute: string;
-
+type CustomersContextProps = {
   customers: Customer[] | null;
   isEmptyCustomers: boolean;
   errorCustomers: string | null;
@@ -18,7 +16,43 @@ type ContextProps = {
   updateCustomer: (customer: Customer) => Promise<{ success: boolean, message: string }>;
   deleteCustomer: (customer: Customer) => Promise<{ success: boolean, message: string }>;
   createCustomer: (customer: Omit<Customer, "id">, id: number) => Promise<{ success: boolean, message: string }>;
+};
 
+const CustomersContext = createContext({} as CustomersContextProps) as React.Context<CustomersContextProps>;
+
+export const CustomersProvider = ({ children }: { children: React.ReactNode }) => {
+  const {
+    customers,
+    isEmptyCustomers,
+    errorCustomers,
+    loadingCustomers,
+    getCustomers,
+    updateCustomer,
+    deleteCustomer,
+    createCustomer
+  } = useCustomers();
+
+  const contextValues: CustomersContextProps = useMemo(() => ({
+    customers,
+    isEmptyCustomers,
+    errorCustomers,
+    loadingCustomers,
+    getCustomers,
+    updateCustomer,
+    deleteCustomer,
+    createCustomer
+  }), [
+    customers,
+    isEmptyCustomers,
+    errorCustomers,
+    loadingCustomers
+  ]);
+  return <CustomersContext.Provider value={contextValues}>{children}</CustomersContext.Provider>;
+};
+
+export const useCustomersContext = () => useContext(CustomersContext);
+
+type ProductsContextProps = {
   products: Product[] | null;
   isEmptyProducts: boolean;
   errorProducts: string | null;
@@ -36,29 +70,11 @@ type ContextProps = {
   updateCategory: (category: Category) => Promise<{ success: boolean, message: string }>;
   deleteCategory: (category: Category) => Promise<{ success: boolean, message: string }>;
   createCategory: (category: Omit<Category, "id">, id: number) => Promise<{ success: boolean, message: string }>;
-
 };
 
-type ProviderProps = {
-  children: React.ReactNode;
-  previousRoute: string;
-};
+const ProductsContext = createContext({} as ProductsContextProps) as React.Context<ProductsContextProps>;
 
-const Context = createContext({} as ContextProps) as React.Context<ContextProps>;
-
-const Provider = ({ children, previousRoute }: ProviderProps) => {
-
-  const {
-    customers,
-    isEmptyCustomers,
-    errorCustomers,
-    loadingCustomers,
-    getCustomers,
-    updateCustomer,
-    deleteCustomer,
-    createCustomer
-  } = useCustomers();
-
+export const ProductsProvider = ({ children }: { children: React.ReactNode }) => {
   const {
     products,
     isEmptyProducts,
@@ -81,18 +97,7 @@ const Provider = ({ children, previousRoute }: ProviderProps) => {
     createCategory
   } = useCategories();
 
-  const contextValues: ContextProps = useMemo(() => ({
-    previousRoute,
-
-    customers,
-    isEmptyCustomers,
-    errorCustomers,
-    loadingCustomers,
-    getCustomers,
-    updateCustomer,
-    deleteCustomer,
-    createCustomer,
-
+  const contextValues: ProductsContextProps = useMemo(() => ({
     products,
     isEmptyProducts,
     errorProducts,
@@ -111,13 +116,6 @@ const Provider = ({ children, previousRoute }: ProviderProps) => {
     deleteCategory,
     createCategory
   }), [
-    previousRoute,
-
-    customers,
-    isEmptyCustomers,
-    errorCustomers,
-    loadingCustomers,
-
     products,
     isEmptyProducts,
     errorProducts,
@@ -129,9 +127,7 @@ const Provider = ({ children, previousRoute }: ProviderProps) => {
     loadingCategories,
   ]);
 
-  return <Context.Provider value={contextValues}>{children}</Context.Provider>;
+  return <ProductsContext.Provider value={contextValues}>{children}</ProductsContext.Provider>;
 };
 
-export const usePlatform = () => useContext(Context);
-
-export default Provider;
+export const useProductsContext = () => useContext(ProductsContext);

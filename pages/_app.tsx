@@ -9,7 +9,7 @@ import { NextThemeProvider } from "@/layout/NextThemeProvider";
 import SafeInitialViewLayout from "@/layout/SafeInitialViewLayout";
 
 import AuthProvider from "@/context/auth";
-import Provider from "@/context/platform";
+import { CustomersProvider, ProductsProvider } from "@/context/platform";
 import ThemeProvider from "@/context/theme";
 import ToastProvider from "@/context/toast";
 
@@ -64,9 +64,11 @@ export default function App({
           <ToastProvider>
             <AuthProvider>
               <SafeInitialViewLayout>
-                <Provider previousRoute={previousRoute}>
-                  {getLayout(<Component {...pageProps} />)}
-                </Provider>
+                <CustomersProvider>
+                  <ProductsProvider>
+                    {getLayout(<Component {...pageProps} />)}
+                  </ProductsProvider>
+                </CustomersProvider>
               </SafeInitialViewLayout>
             </AuthProvider>
           </ToastProvider>

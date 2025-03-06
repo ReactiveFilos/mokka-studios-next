@@ -43,8 +43,20 @@ const AuthProvider = ({ children }: ProviderProps) => {
     isEmptyProfile,
     setIsEmptyProfile,
     loadingProfile,
+    setLoadingProfile,
     getUserProfile,
   } = useUserProfile();
+
+  useEffect(() => {
+    // Cleanup
+    return () => {
+      setProfile(null);
+      setIsEmptyProfile(true);
+      setLoadingProfile(false);
+
+      setIsInitialViewReady(false);
+    };
+  }, []);
 
   useEffect(() => {
     if (loadingProfile) getUserProfile();

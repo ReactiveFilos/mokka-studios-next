@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Control } from "react-hook-form";
 
-import { usePlatform } from "@/context/platform";
+import { useProductsContext } from "@/context/platform";
 
 import { cn } from "@/lib/utils";
 
@@ -40,7 +40,7 @@ export function CategorySelector({
   className,
   disabled = false
 }: CategorySelectorProps) {
-  const { categories, isEmptyCategories } = usePlatform();
+  const { categories, isEmptyCategories } = useProductsContext();
   // Track open state
   const [open, setOpen] = useState(false);
 

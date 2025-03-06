@@ -2,6 +2,8 @@ import NavBar from "@/components/nav/NavBar";
 import { AppSidebar } from "@/components/sidebar/AppSideBar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
+import { SafeProfileLayout } from "./SafeInitialViewLayout";
+
 type LayoutProps = {
   children: React.ReactNode;
 };
@@ -14,24 +16,26 @@ export default function SideBarRootLayout({ children }: LayoutProps) {
         position: "relative",
         minHeight: "100vh",
       }}>
-      <SidebarProvider>
-        <AppSidebar />
-        <div
-          className="width100 backgroundColor"
-          style={{
-            position: "relative",
-            minHeight: "100vh",
-          }}>
-          <NavBar />
+      <SafeProfileLayout>
+        <SidebarProvider>
+          <AppSidebar />
           <div
-            className="width100"
+            className="width100 backgroundColor"
             style={{
-              padding: "1rem 2rem 2rem"
+              position: "relative",
+              minHeight: "100vh",
             }}>
-            {children}
+            <NavBar />
+            <div
+              className="width100"
+              style={{
+                padding: "1rem 2rem 2rem"
+              }}>
+              {children}
+            </div>
           </div>
-        </div>
-      </SidebarProvider>
+        </SidebarProvider>
+      </SafeProfileLayout>
     </main>
   );
 }

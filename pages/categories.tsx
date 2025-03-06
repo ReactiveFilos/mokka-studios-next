@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 
 import SideBarRootLayout from "@/layout/SideBarRootLayout";
 
-import { usePlatform } from "@/context/platform";
+import { useProductsContext } from "@/context/platform";
 import { useNextToast } from "@/context/toast";
 import { Category } from "@/context/types/category.type";
 
@@ -27,7 +27,7 @@ export default function Categories() {
     createCategory,
     products,
     isEmptyProducts
-  } = usePlatform();
+  } = useProductsContext();
 
   useEffect(() => {
     if (loadingCategories) getCategories();

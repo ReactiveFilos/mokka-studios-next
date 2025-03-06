@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 
 import SideBarRootLayout from "@/layout/SideBarRootLayout";
 
-import { usePlatform } from "@/context/platform";
+import { useProductsContext } from "@/context/platform";
 import { useNextToast } from "@/context/toast";
 import { Product } from "@/context/types/product.type";
 
@@ -32,7 +32,7 @@ export default function Products() {
     isEmptyCategories,
     loadingCategories,
     getCategories
-  } = usePlatform();
+  } = useProductsContext();
 
   useEffect(() => {
     if (loadingProducts) getProducts();
