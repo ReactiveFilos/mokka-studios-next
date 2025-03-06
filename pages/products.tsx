@@ -11,6 +11,7 @@ import AppText from "@/components/app/AppText";
 import { TruncatedTextWithHover } from "@/components/elements/TruncatedTextWithHover";
 import { DataTable } from "@/components/table/data-table";
 import { createStandardColumns } from "@/components/table/data-table-columns-factory";
+import { FilterableField } from "@/components/table/types";
 import { Badge } from "@/components/ui/badge";
 
 import { CircleDollarSign, FileText, ShoppingBag, Tag } from "lucide-react";
@@ -128,10 +129,11 @@ export default function Products() {
     }
   ), [handleEdit, handleDelete, getCategoryNameById]);
 
-  const filterableFields = [
+  const filterableFields: FilterableField[] = [
     { value: "title", label: "Title", icon: ShoppingBag },
     { value: "description", label: "Description", icon: FileText },
-    { value: "price", label: "Price", icon: CircleDollarSign },
+    // { value: "categoryId", label: "Category", icon: ShoppingBag },
+    { value: "price", label: "Price", icon: CircleDollarSign, type: "number" },
     { value: "tags", label: "Tags", icon: Tag },
   ];
 

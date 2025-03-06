@@ -43,28 +43,8 @@ export function DataTable<TData>({
 
   // Apply filters to the data
   const filteredData = useMemo(() => {
-    if (filters.length === 0) return data;
-
-    return data.filter(item => {
-      return filters.every(filter => {
-        const value = String(getNestedProperty(item, filter.field) || "").toLowerCase();
-        const filterValue = filter.value.toLowerCase();
-
-        switch (filter.operator) {
-          case "contains":
-            return value.includes(filterValue);
-          case "equals":
-            return value === filterValue;
-          case "startsWith":
-            return value.startsWith(filterValue);
-          case "endsWith":
-            return value.endsWith(filterValue);
-          default:
-            return true;
-        }
-      });
-    });
-  }, [data, filters]);
+    return applyFilters(data, filters, filterableFields);
+  }, [data, filters, filterableFields]);
 
   const table = useReactTable({
     data: filteredData,
@@ -106,5 +86,71 @@ export function DataTable<TData>({
 
 // Helper function to access nested properties with dot notation
 function getNestedProperty(obj: any, path: string): any {
-  return path.split(".").reduce((prev, curr) => prev && prev[curr], obj);
+  const parts = path.split(".");
+  let current = obj;
+
+  for (const part of parts) {
+    if (current === null || current === undefined) {
+      return undefined;
+    }
+    current = current[part];
+  }
+
+  return current;
+}
+
+function applyFilters<TData>(data: TData[], filters: FilterType[], filterableFields: FilterableField[]): TData[] {
+  if (!filters.length) return data;
+
+  return data.filter(item => {
+    return filters.every(filter => {
+      const fieldValue = getNestedProperty(item, filter.field);
+
+      // Skip if field value is undefined
+      if (fieldValue === undefined) return false;
+
+      // Get field type
+      const fieldDef = filterableFields.find(f => f.value === filter.field);
+      const fieldType = fieldDef?.type || "text";
+
+      // For numeric fields
+      if (fieldType === "number") {
+        const numFieldValue = Number(fieldValue);
+        const numFilterValue = Number(filter.value);
+
+        // Skip if either value is not a valid number
+        if (isNaN(numFieldValue) || isNaN(numFilterValue)) return false;
+
+        switch (filter.operator) {
+          case "equals":
+            return numFieldValue === numFilterValue;
+          case "notEquals":
+            return numFieldValue !== numFilterValue;
+          case "gt":
+            return numFieldValue > numFilterValue;
+          case "lt":
+            return numFieldValue < numFilterValue;
+          default:
+            return false;
+        }
+      }
+
+      // For text fields
+      const strFieldValue = String(fieldValue).toLowerCase();
+      const strFilterValue = filter.value.toLowerCase();
+
+      switch (filter.operator) {
+        case "equals":
+          return strFieldValue === strFilterValue;
+        case "contains":
+          return strFieldValue.includes(strFilterValue);
+        case "startsWith":
+          return strFieldValue.startsWith(strFilterValue);
+        case "endsWith":
+          return strFieldValue.endsWith(strFilterValue);
+        default:
+          return strFieldValue.includes(strFilterValue);
+      }
+    });
+  });
 }

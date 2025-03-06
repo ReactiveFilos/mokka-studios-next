@@ -12,7 +12,7 @@ import { TruncatedTextWithHover } from "@/components/elements/TruncatedTextWithH
 import { DataTable } from "@/components/table/data-table";
 import { createStandardColumns } from "@/components/table/data-table-columns-factory";
 
-import { Mail, MapPin, Phone, User } from "lucide-react";
+import { Building2, House, Mail, MapPin, Phone, User } from "lucide-react";
 
 export default function Customers() {
   const { successToast, errorToast } = useNextToast();
@@ -96,8 +96,8 @@ export default function Customers() {
     { value: "lastName", label: "Last Name", icon: User },
     { value: "email", label: "Email", icon: Mail },
     { value: "phone", label: "Phone", icon: Phone },
-    { value: "address.street", label: "Street", icon: MapPin },
-    { value: "address.city", label: "City", icon: MapPin },
+    { value: "address.street", label: "Street", icon: House },
+    { value: "address.city", label: "City", icon: Building2 },
     { value: "address.state", label: "State", icon: MapPin },
     { value: "address.country", label: "Country", icon: MapPin },
   ];

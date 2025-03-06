@@ -33,6 +33,7 @@ export interface FilterableField {
   value: string;
   label: string;
   icon?: ComponentType<{ className?: string }>;
+  type?: "text" | "number";
 }
 
 export interface FilterType {

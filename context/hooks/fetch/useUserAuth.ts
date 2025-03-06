@@ -31,7 +31,7 @@ export const useUserAuth = () => {
       }
       return { data: null, error: "Incorrect email address or password." };
     } catch (error) {
-      return { data: null, error: "Authentication failed" };
+      return { data: null, error: "Incorrect email address or password." };
     }
   }
 

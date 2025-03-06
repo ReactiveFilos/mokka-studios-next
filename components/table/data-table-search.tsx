@@ -8,15 +8,31 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-import { ArrowLeft, ArrowRight, ChevronDown, Equal, Filter, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Equal,
+  EqualNot,
+  Filter,
+  X,
+} from "lucide-react";
 
-// Default operators that can be used for filtering
+// Default operators for text fields
 const operatorOptions = {
-  default: [
+  text: [
     { value: "equals", label: "Equals", icon: Equal },
     { value: "contains", label: "Contains", icon: Filter },
     { value: "startsWith", label: "Starts with", icon: ArrowRight },
     { value: "endsWith", label: "Ends with", icon: ArrowLeft },
+  ],
+  number: [
+    { value: "equals", label: "Equal to", icon: Equal },
+    { value: "notEquals", label: "Not equal to", icon: EqualNot },
+    { value: "gt", label: "Greater than", icon: ChevronRight },
+    { value: "lt", label: "Less than", icon: ChevronLeft },
   ],
 };
 
@@ -37,6 +53,26 @@ export default function DataTableSearch({
     operator: "contains",
     value: "",
   });
+
+  // Get the current field's type (text or number)
+  const getCurrentFieldType = () => {
+    const currentField = filterFields.find(f => f.value === currentFilter.field);
+    return currentField?.type || "text";
+  };
+
+  // Update operator when field changes
+  const handleFieldChange = (value: string) => {
+    const newField = filterFields.find(f => f.value === value);
+    const fieldType = newField?.type || "text";
+
+    const defaultOperator = fieldType === "number" ? "equals" : "contains";
+
+    setCurrentFilter({
+      field: value,
+      operator: defaultOperator,
+      value: "", // Reset value when changing fields
+    });
+  };
 
   const handleAddFilter = () => {
     if (currentFilter.value.trim() !== "") {
@@ -60,6 +96,10 @@ export default function DataTableSearch({
     return null;
   }
 
+  // Get the appropriate operators based on field type
+  const fieldType = getCurrentFieldType();
+  const currentOperators = operatorOptions[fieldType as keyof typeof operatorOptions] || operatorOptions.text;
+
   return (
     <div className="flex flex-wrap items-center gap-2">
       <Popover open={open} onOpenChange={setOpen}>
@@ -81,7 +121,7 @@ export default function DataTableSearch({
             <div className="grid gap-2">
               <Select
                 value={currentFilter.field}
-                onValueChange={(value) => setCurrentFilter({ ...currentFilter, field: value })}>
+                onValueChange={handleFieldChange}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select field" />
                 </SelectTrigger>
@@ -100,7 +140,7 @@ export default function DataTableSearch({
               </Select>
               <div className="flex gap-2">
                 <TooltipProvider>
-                  {operatorOptions.default.map((op) => (
+                  {currentOperators.map((op) => (
                     <Tooltip key={op.value}>
                       <TooltipTrigger asChild>
                         <Button
@@ -127,6 +167,7 @@ export default function DataTableSearch({
                 value={currentFilter.value}
                 onChange={(e) => setCurrentFilter({ ...currentFilter, value: e.target.value })}
                 className="h-8"
+                type={fieldType === "number" ? "number" : "text"}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && currentFilter.value.trim() !== "") {
                     handleAddFilter();
@@ -144,7 +185,7 @@ export default function DataTableSearch({
         <Badge key={filter.id} variant="secondary" className="text-sm">
           {filterFields.find(f => f.value === filter.field)?.label}
           {" "}
-          {operatorOptions.default.find(op => op.value === filter.operator)?.label}
+          {Object.values(operatorOptions).flat().find(op => op.value === filter.operator)?.label}
           {" "}
           {filter.value}
           <Button
