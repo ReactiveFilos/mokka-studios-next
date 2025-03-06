@@ -8,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
-// Customer form schema with validation rules
 export const customerFormSchema = z.object({
   firstName: z.string().min(1, {
     message: "First name is required.",

@@ -1,8 +1,11 @@
 import { Customer } from "@/context/types/customer.type";
+import { Product } from "@/context/types/product.type";
 
 import AddCustomerForm from "@/components/forms/customer/AddCustomerForm";
 import EditCustomerForm from "@/components/forms/customer/EditCustomerForm";
-import CustomerInfo from "@/components/forms/delete/RecordInfo";
+import { CustomerInfo, ProductInfo } from "@/components/forms/delete/RecordInfo";
+import AddProductForm from "@/components/forms/product/AddProductForm";
+import EditProductForm from "@/components/forms/product/EditProductForm";
 import { EntityType } from "@/components/table/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,11 +51,11 @@ export function AddDialog<T>({
           />
         );
       case "product":
-        return (<></>
-          // <AddProductForm
-          //   onSubmit={handleSubmit as (data: Omit<Product, "id">) => Promise<void>}
-          //   onCancel={handleClose}
-          // />
+        return (
+          <AddProductForm
+            onSubmit={handleSubmit as (data: Omit<Product, "id">) => Promise<void>}
+            onCancel={handleClose}
+          />
         );
       case "category":
         return (<></>
@@ -123,12 +126,12 @@ export function EditDialog<T>({
           />
         );
       case "product":
-        return (<></>
-          // <EditProductForm
-          //   product={data as Product}
-          //   onSubmit={handleSubmit as (data: Product) => Promise<void>}
-          //   onCancel={handleClose}
-          // />
+        return (
+          <EditProductForm
+            product={data as Product}
+            onSubmit={handleSubmit as (data: Product) => Promise<void>}
+            onCancel={handleClose}
+          />
         );
       case "category":
         return (<></>
@@ -185,7 +188,7 @@ export function DeleteDialog<T>({
       case "customer":
         return <CustomerInfo customer={data as Customer} />;
       case "product":
-      // return <ProductInfo product={data as Product} />;
+        return <ProductInfo product={data as Product} />;
       case "category":
       // return <CategoryInfo category={data as Category} />;
       default:
