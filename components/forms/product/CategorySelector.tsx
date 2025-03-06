@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Control } from "react-hook-form";
 
 import { usePlatform } from "@/context/platform";
@@ -41,6 +41,8 @@ export function CategorySelector({
   disabled = false
 }: CategorySelectorProps) {
   const { categories, isEmptyCategories } = usePlatform();
+  // Track open state
+  const [open, setOpen] = useState(false);
 
   const categoryOptions = useMemo(() => {
     if (isEmptyCategories) {
@@ -59,12 +61,13 @@ export function CategorySelector({
       render={({ field }) => (
         <FormItem className={className}>
           {label && <FormLabel>{label}</FormLabel>}
-          <Popover>
+          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild disabled={disabled}>
               <FormControl>
                 <Button
                   variant="outline"
                   role="combobox"
+                  aria-expanded={open}
                   className={cn(
                     "w-full justify-between",
                     !field.value && "text-muted-foreground",
@@ -79,18 +82,19 @@ export function CategorySelector({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-full p-0">
+            <PopoverContent className="w-full p-0" align="start">
               <Command>
                 <CommandInput placeholder="Search category..." />
-                <CommandList>
+                <CommandList className="max-h-[200px] overflow-y-auto">
                   <CommandEmpty>No category found.</CommandEmpty>
                   <CommandGroup>
                     {categoryOptions.map((category) => (
                       <CommandItem
                         key={category.value}
-                        value={category.value}
-                        onSelect={(selectedValue) => {
-                          field.onChange(Number(selectedValue));
+                        value={category.label} // Important: Make sure this is what you want to filter by
+                        onSelect={() => {
+                          field.onChange(Number(category.value));
+                          setOpen(false);
                         }}>
                         <Check
                           className={cn(

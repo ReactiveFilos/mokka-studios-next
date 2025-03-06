@@ -22,12 +22,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       case "PUT":
       case "PATCH":
         // Update product
-        const updateResponse = await serverAxios.put(
-          `/products/${id}`,
-          req.body
-        );
+        const updateResponse = await serverAxios.put(`/products/${id}`, {
+          title: req.body.title,
+          description: req.body.description,
+          price: req.body.price,
+          thumbnail: req.body.image,
+        });
 
-        const updatedProduct = mapToProductWithCategoryId(req.body.categoryId, updateResponse.data);
+        const updatedProduct = mapToProductWithCategoryId(req.body.categoryId, req.body.tags, updateResponse.data);
+
         return res.status(200).json(updatedProduct);
       case "DELETE":
         // Delete product

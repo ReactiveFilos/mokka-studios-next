@@ -14,15 +14,15 @@ export type Product = {
 /**
  * Maps DummyJSON product data to our Product type
  */
-export function mapToProductWithCategoryId(categoryId: string, product: any): Product {
+export function mapToProductWithCategoryId(categoryId: string, tags: string[], product: any): Product {
   return {
     id: product.id,
     title: product.title,
     description: product.description,
     categoryId: Number(categoryId),
     price: product.price,
-    image: product.image,
-    tags: product.tags
+    image: product?.image || product?.thumbnail,
+    tags: product.tags || tags
   };
 }
 

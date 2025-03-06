@@ -95,10 +95,10 @@ export default function Products() {
       {
         accessorKey: "price",
         header: "Price",
-        cell: info => `${info.getValue().toLocaleString("it-IT", {
+        cell: info => `${info.getValue() ? info.getValue().toLocaleString("it-IT", {
           style: "currency",
           currency: "EUR",
-        }) || "N/A"}`,
+        }) : "N/A"}`,
       },
       {
         accessorKey: "tags",

@@ -27,10 +27,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(200).json(products);
       case "POST":
         // Create a new product
-        const createResponse = await serverAxios.post("/users/add", req.body);
+        const createResponse = await serverAxios.post("/products/add", {
+          title: req.body.title,
+          description: req.body.description,
+          price: req.body.price,
+          thumbnail: req.body.image,
+        });
 
         // Map the API response to our Product type
-        const newProduct = mapToProductWithCategoryId(req.body.categoryId, createResponse.data);
+        const newProduct = mapToProductWithCategoryId(req.body.categoryId, req.body.tags, createResponse.data);
 
         // Return the created product with 201 Created status
         return res.status(201).json(newProduct);
