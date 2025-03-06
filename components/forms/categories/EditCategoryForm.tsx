@@ -1,6 +1,6 @@
 import { Category } from "@/context/types/category.type";
 
-import BaseCategoryForm, { CategoryFormValues } from "./BaseCategoryForm";
+import BaseCategoryForm, { CategoryFormValues } from "@/components/forms/categories/BaseCategoryForm";
 
 interface EditCategoryFormProps {
   category: Category;

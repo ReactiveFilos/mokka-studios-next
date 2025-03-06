@@ -51,9 +51,20 @@ export default function SignUpAuthForm() {
 
   const { signUpWithEmailPassword } = useUserAuth();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   async function onSubmit(values: FormSchema) {
-    const { fullname, username, email, password } = values;
-    await signUpWithEmailPassword({ fullname, username, email, password });
+    setIsLoading(true);
+    try {
+      const { fullname, username, email, password } = values;
+      await signUpWithEmailPassword({ fullname, username, email, password });
+      /**
+       * Not supported by DummyJSON
+       * TODO: Add simulation / caching system (demo purposes)
+       */
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);

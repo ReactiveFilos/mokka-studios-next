@@ -4,7 +4,8 @@ import axios from "axios";
 
 export function createServerApiClient(req: NextApiRequest) {
   const instance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL,
+    // baseURL: process.env.NEXT_PUBLIC_API_URL,
+    baseURL: "https://dummyjson.com",
     timeout: 10000,
     headers: { "Content-Type": "application/json" }
   });

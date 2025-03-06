@@ -132,7 +132,7 @@ export default function Products() {
   const filterableFields: FilterableField[] = [
     { value: "title", label: "Title", icon: ShoppingBag },
     { value: "description", label: "Description", icon: FileText },
-    // { value: "categoryId", label: "Category", icon: ShoppingBag },
+    // { value: "categoryId", label: "Category", icon: ShoppingBag }, // TODO: Category filtering support
     { value: "price", label: "Price", icon: CircleDollarSign, type: "number" },
     { value: "tags", label: "Tags", icon: Tag },
   ];

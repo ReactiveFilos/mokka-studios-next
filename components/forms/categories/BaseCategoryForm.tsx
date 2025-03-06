@@ -70,7 +70,6 @@ export default function BaseCategoryForm({
 
   // Update slug when name changes and slug hasn't been manually edited
   useEffect(() => {
-    // Only auto-generate slug in add mode or if slug is empty
     const newSlug = generateSlug(watchName);
     form.setValue("slug", newSlug);
   }, [watchName, form]);

@@ -39,14 +39,21 @@ export default function LoginAuthForm() {
   const { signInWithUsernamePassword } = useUserAuth();
   const { setProfile, setIsEmptyProfile } = useAuth();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   async function onSubmit(values: FormSchema) {
-    const { username, password } = values;
-    const { data, error } = await signInWithUsernamePassword({ username, password });
-    if (data) {
-      setProfile(data);
-      setIsEmptyProfile(false);
-    } else if (error) {
-      form.setError("root", { message: error });
+    setIsLoading(true);
+    try {
+      const { username, password } = values;
+      const { data, error } = await signInWithUsernamePassword({ username, password });
+      if (data) {
+        setProfile(data);
+        setIsEmptyProfile(false);
+      } else if (error) {
+        form.setError("root", { message: error });
+      }
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -93,9 +100,7 @@ export default function LoginAuthForm() {
         />
         <FormRootError />
         <Button type="submit" className="w-full">
-          {(form.formState.isSubmitting || form.formState.isSubmitted) && form.formState.isSubmitSuccessful ?
-            <Loader2 className="animate-spin" /> : "Login"
-          }
+          {isLoading ? <Loader2 className="animate-spin" /> : "Login"}
         </Button>
         <div className="mt-4 text-center text-sm">
           Don&apos;t have an account?{" "}
