@@ -29,9 +29,9 @@ export const useUserAuth = () => {
       if (res.status === 200 && res.data) {
         return { data: res.data, error: null };
       }
-      return { data: null, error: "Incorrect email address or password." };
+      return { data: null, error: "Incorrect username or password." };
     } catch (error) {
-      return { data: null, error: "Incorrect email address or password." };
+      return { data: null, error: "Incorrect username or password." };
     }
   }
 
