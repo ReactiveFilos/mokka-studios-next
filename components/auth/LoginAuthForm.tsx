@@ -17,11 +17,11 @@ import { z } from "zod";
 
 const formSchema = z.object({
   username: z.string().min(1, {
-    message: "Username is empty.",
+    message: "Username is required.",
   }),
   // Construction rules only in signup
   password: z.string().min(1, {
-    message: "Password is empty.",
+    message: "Password is required.",
   })
 });
 

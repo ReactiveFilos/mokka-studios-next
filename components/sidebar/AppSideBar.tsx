@@ -1,5 +1,3 @@
-import SafeProfileLayout from "@/layout/SafeProfileLayout";
-
 import { useAuth } from "@/context/auth";
 
 import { NavProfile } from "@/components/profile/NavProfile";
@@ -10,19 +8,17 @@ export function AppSidebar() {
   const { profile } = useAuth();
   return (
     <Sidebar>
-      <SafeProfileLayout>
-        <SidebarContent
-          style={{ marginTop: "5rem", padding: "0rem 0.15rem" }}>
-          <SideBarPages />
-        </SidebarContent>
-        <SidebarFooter
-          className="width100"
-          style={{ padding: "0.5rem 0.45rem 0.5rem 0.5rem" }}>
-          <NavProfile
-            profile={profile}
-          />
-        </SidebarFooter>
-      </SafeProfileLayout>
+      <SidebarContent
+        style={{ marginTop: "5rem", padding: "0rem 0.15rem" }}>
+        <SideBarPages />
+      </SidebarContent>
+      <SidebarFooter
+        className="width100"
+        style={{ padding: "0.5rem 0.45rem 0.5rem 0.5rem" }}>
+        <NavProfile
+          profile={profile}
+        />
+      </SidebarFooter>
     </Sidebar>
   );
 }

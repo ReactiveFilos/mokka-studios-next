@@ -19,7 +19,7 @@ const formSchema = z.object({
     .min(2, { message: "Full Name must be at least 2 characters." })
     .max(50, { message: "Full Name must be less than 25 characters." }),
   username: z.string()
-    .min(2, { message: "Username must be at least 2 characters." })
+    .min(2, { message: "Username must be at least 3 characters." })
     .max(25, { message: "Username must be less than 25 characters." })
     .regex(/^[a-zA-Z0-9_]+$/, {
       message: "Username must contain only letters, numbers, underscores.",

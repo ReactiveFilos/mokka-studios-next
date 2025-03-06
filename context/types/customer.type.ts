@@ -24,7 +24,7 @@ export function mapToCustomer(user: any): Customer {
     email: user.email,
     phone: user.phone,
     address: {
-      street: user.address?.address || "",
+      street: user.address?.address || user.address?.street || "",
       city: user.address?.city || "",
       state: user.address?.state || "",
       country: user.address?.country || ""

@@ -80,7 +80,7 @@ export default function BaseCustomerForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className={`space-y-4 ${className}`}>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <div className="mt-3 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {customerFields.map((field) => (
             <FormField
               key={field.name}

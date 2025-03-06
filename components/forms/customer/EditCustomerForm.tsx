@@ -29,7 +29,7 @@ export default function EditCustomerForm({ customer, onSubmit, onCancel, classNa
       email: values.email,
       phone: values.phone,
       address: {
-        street: customer.address.street,
+        street: values.street,
         city: values.city,
         state: values.state,
         country: values.country,
