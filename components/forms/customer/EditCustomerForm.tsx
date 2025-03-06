@@ -1,6 +1,6 @@
 import { Customer } from "@/context/types/customer.type";
 
-import CustomerFormBase, { CustomerFormValues } from "@/components/forms/customer/BaseCustomerForm";
+import BaseCustomerForm, { CustomerFormValues } from "@/components/forms/customer/BaseCustomerForm";
 
 interface EditCustomerFormProps {
   customer: Customer;
@@ -40,7 +40,7 @@ export default function EditCustomerForm({ customer, onSubmit, onCancel, classNa
   };
 
   return (
-    <CustomerFormBase
+    <BaseCustomerForm
       defaultValues={defaultValues}
       onSubmit={handleSubmit}
       onCancel={onCancel}

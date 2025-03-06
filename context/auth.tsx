@@ -4,7 +4,6 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import { useUserProfile } from "@/context/hooks/fetch/useUserProfile";
 import { usePagesRouter } from "@/context/hooks/usePagesRouter";
-import { useTheme } from "@/context/theme";
 import { Profile } from "@/context/types/profile.type";
 import { SetState } from "@/context/types/type";
 
@@ -33,7 +32,6 @@ const Context = createContext({} as ContextProps) as React.Context<ContextProps>
 const AuthProvider = ({ children }: ProviderProps) => {
   const { pathname } = useRouter();
   const [isInitialViewReady, setIsInitialViewReady] = useState<boolean>(false);
-  const { handleChangeColorScheme } = useTheme();
 
   const { pagesRouter } = usePagesRouter();
 
@@ -83,10 +81,6 @@ const AuthProvider = ({ children }: ProviderProps) => {
       setIsInitialViewReady(true);
     }
   }, [profile, isEmptyProfile, loadingProfile, isAuthRoute]);
-
-  // useEffect(() => {
-  //   if (isInitialViewReady && isAuthRoute) handleChangeColorScheme("light");
-  // }, [isInitialViewReady, isAuthRoute]);
 
   const contextValues: ContextProps = useMemo(() => ({
     isInitialViewReady,

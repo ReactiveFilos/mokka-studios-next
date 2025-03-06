@@ -1,6 +1,6 @@
 import { Customer } from "@/context/types/customer.type";
 
-import CustomerFormBase, { CustomerFormValues } from "@/components/forms/customer/BaseCustomerForm";
+import BaseCustomerForm, { CustomerFormValues } from "@/components/forms/customer/BaseCustomerForm";
 
 interface AddCustomerFormProps {
   onSubmit: (data: Omit<Customer, "id">) => Promise<void>;
@@ -38,7 +38,7 @@ export default function AddCustomerForm({ onSubmit, onCancel, className = "" }: 
   };
 
   return (
-    <CustomerFormBase
+    <BaseCustomerForm
       defaultValues={defaultValues}
       onSubmit={handleSubmit}
       onCancel={onCancel}

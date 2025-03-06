@@ -67,7 +67,6 @@ export default function BaseCategoryForm({
 
   // Optional: For better UX, auto-generate slug from name
   const watchName = form.watch("name");
-  const currentSlug = form.watch("slug");
 
   // Update slug when name changes and slug hasn't been manually edited
   useEffect(() => {

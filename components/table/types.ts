@@ -74,7 +74,3 @@ export interface DeleteDialogProps<T> extends BaseDialogProps {
 export interface AddDialogProps<T> extends BaseDialogProps {
   onSave: (data: Omit<T, "id">) => void;
 }
-
-export interface PreviewDialogProps<T> extends BaseDialogProps {
-  data: T;
-}

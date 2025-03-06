@@ -1,6 +1,6 @@
 import { Category } from "@/context/types/category.type";
 
-import CategoryFormBase, { CategoryFormValues } from "./BaseCategoryForm";
+import BaseCategoryForm, { CategoryFormValues } from "./BaseCategoryForm";
 
 interface EditCategoryFormProps {
   category: Category;
@@ -26,7 +26,7 @@ export default function EditCategoryForm({ category, onSubmit, onCancel, classNa
   };
 
   return (
-    <CategoryFormBase
+    <BaseCategoryForm
       defaultValues={defaultValues}
       onSubmit={handleSubmit}
       onCancel={onCancel}

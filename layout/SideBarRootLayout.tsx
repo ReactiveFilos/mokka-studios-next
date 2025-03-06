@@ -1,8 +1,8 @@
+import { SafeProfileLayout } from "@/layout/SafeInitialViewLayout";
+
 import NavBar from "@/components/nav/NavBar";
 import { AppSidebar } from "@/components/sidebar/AppSideBar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-
-import { SafeProfileLayout } from "./SafeInitialViewLayout";
 
 type LayoutProps = {
   children: React.ReactNode;

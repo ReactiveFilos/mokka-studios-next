@@ -1,6 +1,6 @@
 import { Category } from "@/context/types/category.type";
 
-import CategoryFormBase, { CategoryFormValues } from "./BaseCategoryForm";
+import BaseCategoryForm, { CategoryFormValues } from "@/components/forms/categories/BaseCategoryForm";
 
 interface AddCategoryFormProps {
   onSubmit: (data: Omit<Category, "id">) => Promise<void>;
@@ -24,7 +24,7 @@ export default function AddCategoryForm({ onSubmit, onCancel, className = "" }: 
   };
 
   return (
-    <CategoryFormBase
+    <BaseCategoryForm
       defaultValues={defaultValues}
       onSubmit={handleSubmit}
       onCancel={onCancel}

@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import Link from "next/link";
 
 import SideBarRootLayout from "@/layout/SideBarRootLayout";
 
@@ -42,32 +42,31 @@ const navigationBlocks = [
 ];
 
 export default function Home() {
-  const router = useRouter();
-
   return (
     <div className="w-full mt-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">
         {navigationBlocks.map((block) => (
-          <Card
-            key={block.title}
-            className="group cursor-pointer transition-all duration-200 hover:-translate-y-1 w-full"
-            onClick={() => router.push(block.path)}>
-            <CardHeader className="pb-3">
-              <div className={`p-2 rounded-md w-fit ${block.color}`}>
-                <block.icon className="h-5 w-5" />
-              </div>
-            </CardHeader>
-            <CardContent className="pb-2">
-              <CardTitle className="text-lg mb-1">{block.title}</CardTitle>
-              <CardDescription className="text-sm">{block.description}</CardDescription>
-            </CardContent>
-            <CardFooter className="pt-0">
-              <div className="flex items-center text-muted-foreground group-hover:text-primary">
-                <span className="text-sm font-medium">Navigate</span>
-                <ArrowRight className={`ml-1 h-4 w-4 ${block.hoverColor} group-hover:translate-x-1`} />
-              </div>
-            </CardFooter>
-          </Card>
+          <Link href={block.path} key={block.title}>
+            <Card
+              key={block.title}
+              className="group cursor-pointer transition-all duration-200 hover:-translate-y-1 w-full">
+              <CardHeader className="pb-3">
+                <div className={`p-2 rounded-md w-fit ${block.color}`}>
+                  <block.icon className="h-5 w-5" />
+                </div>
+              </CardHeader>
+              <CardContent className="pb-2">
+                <CardTitle className="text-lg mb-1">{block.title}</CardTitle>
+                <CardDescription className="text-sm">{block.description}</CardDescription>
+              </CardContent>
+              <CardFooter className="pt-0">
+                <div className="flex items-center text-muted-foreground group-hover:text-primary">
+                  <span className="text-sm font-medium">Navigate</span>
+                  <ArrowRight className={`ml-1 h-4 w-4 ${block.hoverColor} group-hover:translate-x-1`} />
+                </div>
+              </CardFooter>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>
