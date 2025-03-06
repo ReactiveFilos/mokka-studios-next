@@ -5,6 +5,10 @@ import { useCallback } from "react";
 export const usePagesRouter = () => {
   const router = useRouter();
 
+  const index = useCallback(() => {
+    router.push("/");
+  }, [router]);
+
   const login = useCallback(() => {
     router.push("/login");
   }, [router]);
@@ -17,5 +21,5 @@ export const usePagesRouter = () => {
     router.push("/account");
   }, [router]);
 
-  return { pagesRouter: { login, customers, account } };
+  return { pagesRouter: { index, login, customers, account } };
 };

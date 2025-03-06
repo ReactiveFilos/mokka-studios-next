@@ -66,7 +66,7 @@ const AuthProvider = ({ children }: ProviderProps) => {
     if (loadingProfile) return;
 
     if (profile && isEmptyProfile === false && isAuthRoute) {
-      pagesRouter.customers();
+      pagesRouter.index();
       return;
     }
     if (profile && isEmptyProfile === false && isAuthRoute === false) {
