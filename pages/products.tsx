@@ -85,20 +85,20 @@ export default function Products() {
       {
         accessorKey: "description",
         header: "Description",
-        cell: info => <TruncatedTextWithHover text={info.getValue()} maxLength={80} />,
+        cell: info => <TruncatedTextWithHover text={info.getValue()} maxLength={70} />,
       },
       {
         accessorKey: "categoryId",
         header: "Category",
-        cell: info => getCategoryNameById(info.getValue())
+        cell: info => getCategoryNameById(info.getValue()),
       },
       {
         accessorKey: "price",
         header: "Price",
-        cell: info => `${info.getValue()?.toLocaleString("it-IT", {
+        cell: info => `${info.getValue().toLocaleString("it-IT", {
           style: "currency",
           currency: "EUR",
-        })}`,
+        }) || "N/A"}`,
       },
       {
         accessorKey: "tags",
@@ -107,11 +107,11 @@ export default function Products() {
           const tags = info.getValue() as string[];
           return (
             <div className="flex flex-wrap gap-1">
-              {tags && tags.map(tag => (
+              {tags ? tags.map(tag => (
                 <Badge key={tag} variant="secondary" className="mr-1">
                   {tag}
                 </Badge>
-              ))}
+              )) : "N/A"}
             </div>
           );
         },
@@ -136,8 +136,6 @@ export default function Products() {
   ];
 
   const memoizedProducts = useMemo(() => {
-    console.log("products", products);
-
     if (isEmptyProducts) return <AppText size="mid" weight="bold" color="secondary">No products found</AppText>;
     if (errorProducts) return <AppText size="mid" weight="bold" color="secondary">{errorProducts}</AppText>;
 

@@ -5,6 +5,7 @@ export type Customer = {
   email: string;
   phone: string;
   address: {
+    street: string;
     city: string;
     state: string;
     country: string;
@@ -23,6 +24,7 @@ export function mapToCustomer(user: any): Customer {
     email: user.email,
     phone: user.phone,
     address: {
+      street: user.address?.address || "",
       city: user.address?.city || "",
       state: user.address?.state || "",
       country: user.address?.country || ""

@@ -8,6 +8,7 @@ import { Customer } from "@/context/types/customer.type";
 
 import AppDiv from "@/components/app/AppDiv";
 import AppText from "@/components/app/AppText";
+import { TruncatedTextWithHover } from "@/components/elements/TruncatedTextWithHover";
 import { DataTable } from "@/components/table/data-table";
 import { createStandardColumns } from "@/components/table/data-table-columns-factory";
 
@@ -75,7 +76,7 @@ export default function Customers() {
         header: "Location",
         cell: info => {
           const address = info.getValue();
-          return `${address.city}, ${address.state}, ${address.country}`;
+          return <TruncatedTextWithHover text={`${address.street}, ${address.city}, ${address.state}, ${address.country}`} maxLength={70} />;
         },
         meta: { disableSorting: true },
       },
@@ -95,14 +96,13 @@ export default function Customers() {
     { value: "lastName", label: "Last Name", icon: User },
     { value: "email", label: "Email", icon: Mail },
     { value: "phone", label: "Phone", icon: Phone },
+    { value: "address.street", label: "Street", icon: MapPin },
     { value: "address.city", label: "City", icon: MapPin },
     { value: "address.state", label: "State", icon: MapPin },
     { value: "address.country", label: "Country", icon: MapPin },
   ];
 
   const memoizedCustomers = useMemo(() => {
-    // if (loadingCustomers) return <Loader2 className="animate-spin" size="1.65rem" />;
-
     if (isEmptyCustomers) return <AppText size="mid" weight="bold" color="secondary">No customers found</AppText>;
     if (errorCustomers) return <AppText size="mid" weight="bold" color="secondary">{errorCustomers}</AppText>;
 
