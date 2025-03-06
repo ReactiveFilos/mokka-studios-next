@@ -8,6 +8,7 @@ export const ROUTE_TITLES: Record<string, string> = {
 } as const;
 
 export const sidebarRoutes = [
+  { name: "Home", path: "/" },
   { name: "Customers", path: "/customers" },
   { name: "Products", path: "/products" },
   { name: "Categories", path: "/categories" },

@@ -33,7 +33,8 @@ export function NavProfile({
   const { pagesRouter } = usePagesRouter();
   const { signOut } = useUserAuth();
 
-  const initial = profile.fullname.slice(0, 1).toUpperCase();
+  const initials = profile.firstName.slice(0, 1).toUpperCase() + profile.lastName.slice(0, 1).toUpperCase();
+  const fullName = `${profile.firstName} ${profile.lastName}`;
 
   return (
     <SidebarMenu>
@@ -45,10 +46,10 @@ export function NavProfile({
               className="width100 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               style={{ gap: "0.78125rem" }}>
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={profile.avatar} alt={initial} />
-                <AvatarFallback className="rounded-lg">{initial}</AvatarFallback>
+                <AvatarImage src={profile.avatar} alt={initials} />
+                <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
               </Avatar>
-              <AppText size="mid" weight="lightBold">{profile.fullname}</AppText>
+              <AppText size="mid" weight="lightBold">{fullName}</AppText>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -61,10 +62,10 @@ export function NavProfile({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={profile.avatar} alt={initial} />
-                  <AvatarFallback className="rounded-lg">{initial}</AvatarFallback>
+                  <AvatarImage src={profile.avatar} alt={initials} />
+                  <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
                 </Avatar>
-                <AppText size="mid" weight="lightBold">{profile.fullname}</AppText>
+                <AppText size="mid" weight="lightBold">{fullName}</AppText>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />

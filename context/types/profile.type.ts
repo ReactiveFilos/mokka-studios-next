@@ -1,6 +1,7 @@
 export type Profile = {
   id: number;
-  fullname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   username?: string;
   avatar?: string | null;
@@ -12,7 +13,8 @@ export type Profile = {
 export function mapToProfile(user: any): Profile {
   return {
     id: user.id,
-    fullname: `${user.firstName} ${user.lastName}`,
+    firstName: user.firstName,
+    lastName: user.lastName,
     email: user.email,
     username: user.username,
     avatar: user.image || null,
