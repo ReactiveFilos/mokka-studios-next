@@ -28,6 +28,7 @@ export interface TableActions<T = any> {
 // Type definitions
 export type EntityType = "customer" | "product" | "category";
 export type ActionType = "edit" | "delete" | "add";
+export type EntityFormMode = "add" | "edit";
 
 export interface FilterableField {
   value: string;

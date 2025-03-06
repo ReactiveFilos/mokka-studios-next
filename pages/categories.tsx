@@ -26,12 +26,18 @@ export default function Categories() {
     deleteCategory,
     createCategory,
     products,
-    isEmptyProducts
+    isEmptyProducts,
+    loadingProducts,
+    getProducts
   } = useProductsContext();
 
   useEffect(() => {
     if (loadingCategories) getCategories();
   }, [loadingCategories, getCategories]);
+
+  useEffect(() => {
+    if (loadingProducts) getProducts();
+  }, [loadingProducts, getProducts]);
 
   const handleEdit = useCallback(async (category: Category) => {
     const { success, message } = await updateCategory(category);
@@ -45,7 +51,7 @@ export default function Categories() {
   const handleDelete = useCallback(async (category: Category) => {
     // Check if any products use this category
     if (products && isEmptyProducts === false && products.some(product => product.categoryId === category.id)) {
-      errorToast({ id: "CategoryDelete", message: "Category is in use by products. Remove or reassign first." });
+      errorToast({ id: "CategoryDelete", message: "Category is in use by products.\nRemove or reassign first." });
       return;
     }
 

@@ -13,7 +13,7 @@ export default function AddProductForm({ onSubmit, onCancel, className = "" }: A
     title: "",
     description: "",
     categoryId: 0,
-    price: 0,
+    price: undefined,
     image: "",
     tags: "",
   };
@@ -24,9 +24,9 @@ export default function AddProductForm({ onSubmit, onCancel, className = "" }: A
       title: values.title,
       description: values.description,
       categoryId: values.categoryId,
-      price: values.price,
+      price: values.price ?? 0, // Nullish operator to default to 0
       image: values.image || "",
-      tags: values.tags ? values.tags.split(",").map(tag => tag.trim()).filter(Boolean) : [],
+      tags: values.tags ? values.tags.split(",").map(tag => tag.trim().toLowerCase()).filter(Boolean) : [],
     };
 
     await onSubmit(productData);

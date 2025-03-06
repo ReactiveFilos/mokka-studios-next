@@ -15,7 +15,7 @@ export default function EditProductForm({ product, onSubmit, onCancel, className
     title: product.title,
     description: product.description,
     categoryId: product.categoryId,
-    price: product.price,
+    price: product.price || undefined,
     image: product.image || "",
     tags: product.tags ? product.tags.join(", ") : "",
   };
@@ -26,9 +26,9 @@ export default function EditProductForm({ product, onSubmit, onCancel, className
       title: values.title,
       description: values.description,
       categoryId: values.categoryId,
-      price: values.price,
+      price: values.price ?? 0,
       image: values.image || "",
-      tags: values.tags ? values.tags.split(",").map(tag => tag.trim()).filter(Boolean) : [],
+      tags: values.tags ? values.tags.split(",").map(tag => tag.trim().toLocaleLowerCase()).filter(Boolean) : [],
     };
 
     await onSubmit(updatedProduct);

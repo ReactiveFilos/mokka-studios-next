@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 
+import { EntityFormMode } from "@/components/table/types";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -51,13 +52,11 @@ const customerFields: { name: keyof CustomerFormValues; label: string; placehold
   { name: "country", label: "Country", placeholder: "United States" },
 ] as const;
 
-type CustomerFormMode = "add" | "edit";
-
 interface BaseCustomerFormProps {
   defaultValues: CustomerFormValues;
   onSubmit: (data: CustomerFormValues) => Promise<void>;
   onCancel?: () => void;
-  mode: CustomerFormMode;
+  mode: EntityFormMode;
   className?: string;
 }
 

@@ -108,7 +108,7 @@ export default function Products() {
           const tags = info.getValue() as string[];
           return (
             <div className="flex flex-wrap gap-1">
-              {tags ? tags.map(tag => (
+              {tags && tags.length > 0 ? tags.map(tag => (
                 <Badge key={tag} variant="secondary" className="mr-1">
                   {tag}
                 </Badge>

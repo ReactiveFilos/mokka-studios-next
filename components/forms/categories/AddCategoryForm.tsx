@@ -1,0 +1,35 @@
+import { Category } from "@/context/types/category.type";
+
+import CategoryFormBase, { CategoryFormValues } from "./BaseCategoryForm";
+
+interface AddCategoryFormProps {
+  onSubmit: (data: Omit<Category, "id">) => Promise<void>;
+  onCancel?: () => void;
+  className?: string;
+}
+
+export default function AddCategoryForm({ onSubmit, onCancel, className = "" }: AddCategoryFormProps) {
+  const defaultValues: CategoryFormValues = {
+    name: "",
+    slug: "",
+  };
+
+  const handleSubmit = async (values: CategoryFormValues) => {
+    const categoryData: Omit<Category, "id"> = {
+      name: values.name,
+      slug: values.slug,
+    };
+
+    await onSubmit(categoryData);
+  };
+
+  return (
+    <CategoryFormBase
+      defaultValues={defaultValues}
+      onSubmit={handleSubmit}
+      onCancel={onCancel}
+      mode="add"
+      className={className}
+    />
+  );
+}

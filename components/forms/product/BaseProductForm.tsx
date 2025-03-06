@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 
+import { EntityFormMode } from "@/components/table/types";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -20,9 +21,14 @@ export const productFormSchema = z.object({
   categoryId: z.number().min(1, {
     message: "Category is required.",
   }),
-  price: z.coerce.number().positive({
-    message: "Price must be a positive number.",
-  }),
+  // Allow empty string and transform to undefined
+  price: z.union([
+    z.string().transform(val => val === "" ? undefined : parseFloat(val)),
+    z.number()
+  ])
+    .refine(val => val === undefined || (typeof val === "number" && val > 0), {
+      message: "Price must be a positive number.",
+    }),
   image: z.string().url({
     message: "Must be a valid URL.",
   }).optional().or(z.literal("")),
@@ -31,13 +37,11 @@ export const productFormSchema = z.object({
 
 export type ProductFormValues = z.infer<typeof productFormSchema>;
 
-type ProductFormMode = "add" | "edit";
-
 interface BaseProductFormProps {
   defaultValues: ProductFormValues;
   onSubmit: (data: ProductFormValues) => Promise<void>;
   onCancel?: () => void;
-  mode: ProductFormMode;
+  mode: EntityFormMode;
   className?: string;
 }
 
@@ -100,11 +104,12 @@ export default function BaseProductForm({
                   <Input
                     type="number"
                     step="0.01"
+                    min="0"
                     placeholder="0.00"
-                    {...field}
+                    value={field.value ?? ""}
                     onChange={(e) => {
-                      // Convert string value to number
-                      field.onChange(e.target.valueAsNumber);
+                      const value = e.target.value;
+                      field.onChange(value === "" ? "" : parseFloat(value));
                     }}
                   />
                 </FormControl>
@@ -117,7 +122,7 @@ export default function BaseProductForm({
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Image URL</FormLabel>
+                <FormLabel>Image URL (optional)</FormLabel>
                 <FormControl>
                   <Input placeholder="https://example.com/image.jpg" {...field} />
                 </FormControl>
@@ -130,7 +135,7 @@ export default function BaseProductForm({
             name="tags"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tags (comma separated)</FormLabel>
+                <FormLabel>Tags (comma separated, optional)</FormLabel>
                 <FormControl>
                   <Input placeholder="tag1, tag2, tag3" {...field} />
                 </FormControl>

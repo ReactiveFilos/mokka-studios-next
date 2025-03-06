@@ -1,9 +1,12 @@
+import { Category } from "@/context/types/category.type";
 import { Customer } from "@/context/types/customer.type";
 import { Product } from "@/context/types/product.type";
 
+import AddCategoryForm from "@/components/forms/categories/AddCategoryForm";
+import EditCategoryForm from "@/components/forms/categories/EditCategoryForm";
 import AddCustomerForm from "@/components/forms/customer/AddCustomerForm";
 import EditCustomerForm from "@/components/forms/customer/EditCustomerForm";
-import { CustomerInfo, ProductInfo } from "@/components/forms/delete/RecordInfo";
+import { CategoryInfo, CustomerInfo, ProductInfo } from "@/components/forms/delete/RecordInfo";
 import AddProductForm from "@/components/forms/product/AddProductForm";
 import EditProductForm from "@/components/forms/product/EditProductForm";
 import { EntityType } from "@/components/table/types";
@@ -58,11 +61,11 @@ export function AddDialog<T>({
           />
         );
       case "category":
-        return (<></>
-          // <AddCategoryForm
-          //   onSubmit={handleSubmit as (data: Omit<Category, "id">) => Promise<void>}
-          //   onCancel={handleClose}
-          // />
+        return (
+          <AddCategoryForm
+            onSubmit={handleSubmit as (data: Omit<Category, "id">) => Promise<void>}
+            onCancel={handleClose}
+          />
         );
       default:
         return (
@@ -134,12 +137,12 @@ export function EditDialog<T>({
           />
         );
       case "category":
-        return (<></>
-          // <EditCategoryForm
-          //   category={data as Category}
-          //   onSubmit={handleSubmit as (data: Category) => Promise<void>}
-          //   onCancel={handleClose}
-          // />
+        return (
+          <EditCategoryForm
+            category={data as Category}
+            onSubmit={handleSubmit as (data: Category) => Promise<void>}
+            onCancel={handleClose}
+          />
         );
       default:
         return (
@@ -190,7 +193,7 @@ export function DeleteDialog<T>({
       case "product":
         return <ProductInfo product={data as Product} />;
       case "category":
-      // return <CategoryInfo category={data as Category} />;
+        return <CategoryInfo category={data as Category} />;
       default:
         return (
           <div className="py-4 text-center">

@@ -81,7 +81,8 @@ const ToastProvider = ({ children }: ToastProviderProps) => {
         position="top-center"
         reverseOrder={false}
         toastOptions={{
-          style: styleToast
+          style: styleToast,
+          className: "text-center",
         }}
       />
       {children}

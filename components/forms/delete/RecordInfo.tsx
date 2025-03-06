@@ -69,3 +69,7 @@ export function CustomerInfo({ customer, className = "" }: { customer: Customer;
 export function ProductInfo({ product, className = "" }: { product: Product; className?: string }) {
   return <RecordInfo data={product} entityType="product" className={className} />;
 }
+
+export function CategoryInfo({ category, className = "" }: { category: Category; className?: string }) {
+  return <RecordInfo data={category} entityType="category" className={className} />;
+}
