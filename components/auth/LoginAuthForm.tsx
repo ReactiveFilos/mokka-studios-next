@@ -15,6 +15,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
 
+/**
+ * You can login with any credentials found here: https://dummyjson.com/users
+ * username and password
+ * Example: jamesd, jamesdpass
+ */
+
 const formSchema = z.object({
   username: z.string().min(1, {
     message: "Username is required.",
