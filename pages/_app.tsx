@@ -33,7 +33,7 @@ export default function App({
   const getLayout = ComponentWithLayout.getLayout || ((page) => page);
 
   const router = useRouter();
-  const [previousRoute, setPreviousRoute] = useState("/");
+  const [previousRoute, setPreviousRoute] = useState("/"); // If I need efficient previous route tracking
 
   useEffect(() => {
     router.events.on("routeChangeStart", () => {

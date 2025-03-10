@@ -2,6 +2,13 @@ import { CSSProperties, useMemo } from "react";
 
 import { classNames } from "@/styles/theme/classNameUtils";
 
+/**
+ * AppDiv is just a higly configurable layout component
+ * Provides consistent styling patterns, relying on utility classes / personal css sheets
+ * It helps a lot when I need a very fast and flowless development process
+ * It's more like a helper component, very functional in the end
+ */
+
 type FlexLayout =
   | "flexRowCenter"
   | "flexRowSpaceBetCenter"

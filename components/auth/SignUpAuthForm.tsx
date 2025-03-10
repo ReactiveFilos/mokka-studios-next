@@ -130,9 +130,7 @@ export default function SignUpAuthForm() {
           )}
         />
         <Button type="submit" className="w-full">
-          {(form.formState.isSubmitting || form.formState.isSubmitted) && form.formState.isSubmitSuccessful ?
-            <Loader2 className="animate-spin" /> : "Continue"
-          }
+          {isLoading ? <Loader2 className="animate-spin" /> : "Continue"}
         </Button>
         <div className="mt-4 text-center text-sm">
           Already have an account?{" "}

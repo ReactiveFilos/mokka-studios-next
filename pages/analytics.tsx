@@ -10,9 +10,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Analytics() {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Simulate API request
+  /**
+    * TODO: Put data in mocked api and fetch it
+    * For now, I just implemented a function that returns mocked data
+  */
   const fetchData = async () => {
     setIsLoading(true);
     try {

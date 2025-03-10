@@ -8,6 +8,8 @@ interface CalendarBarChartProps {
   };
 }
 
+/* TODO */
+
 export function CalendarBarChart({ barChartData, initialDateRange }: CalendarBarChartProps) {
 
   return (

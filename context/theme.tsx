@@ -4,6 +4,12 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 import localforage from "localforage";
 
+/**
+ * My theme context to handle color scheme changes
+ * Works seamlessly with next-themes, used for every Shadcn component
+ * Provides reactivity to my components
+ */
+
 type ColorSchemeName = "light" | "dark";
 
 type ContextProps = {

@@ -13,8 +13,10 @@ interface LinePieChartsProps {
   categoryData: CategoryData[];
 }
 
+type ActiveTimeMetric = "revenue" | "users";
+
 export function LinePieCharts({ timeSeriesData, categoryData }: LinePieChartsProps) {
-  const [activeTimeMetric, setActiveTimeMetric] = useState<"revenue" | "users">("revenue");
+  const [activeTimeMetric, setActiveTimeMetric] = useState<ActiveTimeMetric>("revenue");
 
   // Format date for x-axis
   const formattedTimeData = timeSeriesData.map(item => ({
@@ -62,7 +64,7 @@ export function LinePieCharts({ timeSeriesData, categoryData }: LinePieChartsPro
       <Card className="lg:col-span-2">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-md font-medium">Performance Overview</CardTitle>
-          <Tabs defaultValue="revenue" value={activeTimeMetric} onValueChange={(v) => setActiveTimeMetric(v as "revenue" | "users")}>
+          <Tabs defaultValue="revenue" value={activeTimeMetric} onValueChange={(v: ActiveTimeMetric) => setActiveTimeMetric(v)}>
             <TabsList className="grid grid-cols-2 w-[200px]">
               <TabsTrigger value="revenue">Revenue</TabsTrigger>
               <TabsTrigger value="users">Users</TabsTrigger>

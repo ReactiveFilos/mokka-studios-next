@@ -36,6 +36,10 @@ export interface AnalyticsData {
   }
 }
 
+/**
+ * TODO: Put data in mocked api and fetch it
+ * For now, I just implemented a function that returns mocked data
+ */
 
 import { CreditCard, ShoppingCart, TrendingUp, Users } from "lucide-react";
 
