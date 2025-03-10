@@ -64,7 +64,7 @@ export function LinePieCharts({ timeSeriesData, categoryData }: LinePieChartsPro
       <Card className="lg:col-span-2">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-md font-medium">Performance Overview</CardTitle>
-          <Tabs defaultValue="revenue" value={activeTimeMetric} onValueChange={(v: ActiveTimeMetric) => setActiveTimeMetric(v)}>
+          <Tabs defaultValue="revenue" value={activeTimeMetric} onValueChange={(v: string) => setActiveTimeMetric(v as ActiveTimeMetric)}>
             <TabsList className="grid grid-cols-2 w-[200px]">
               <TabsTrigger value="revenue">Revenue</TabsTrigger>
               <TabsTrigger value="users">Users</TabsTrigger>
