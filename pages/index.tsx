@@ -39,6 +39,14 @@ const navigationBlocks = [
     color: "bg-purple-500/10 text-purple-600",
     hoverColor: "group-hover:text-purple-600",
   },
+  {
+    title: "Tables",
+    description: "View and manage your tables",
+    icon: LayoutGrid,
+    path: "/tables",
+    color: "bg-amber-500/10 text-amber-600",
+    hoverColor: "group-hover:text-amber-600",
+  }
 ];
 
 export default function Home() {
