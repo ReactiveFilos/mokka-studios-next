@@ -71,6 +71,7 @@ import {
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ChevronsUpDown,
   ChevronUpIcon,
   CircleAlertIcon,
   Columns3Icon,
@@ -79,7 +80,6 @@ import {
   Equal,
   EqualNot,
   Filter as FilterIcon,
-  MoreHorizontalIcon,
   MoveLeftIcon,
   MoveRightIcon,
   PlusIcon,
@@ -231,7 +231,7 @@ export function DataTableV2<TData>({
             aria-label="Select row"
           />
         ),
-        size: 30,
+        size: 26,
         enableSorting: false,
         enableHiding: false,
       },
@@ -473,7 +473,7 @@ export function DataTableV2<TData>({
                     <TableHead
                       key={header.id}
                       style={{ width: `${header.getSize()}px` }}
-                      className="h-11">
+                      className="py-2">
                       {header.isPlaceholder ? null : (
                         <div className="space-y-2">
                           {/* Column Header with Sort */}
@@ -491,9 +491,9 @@ export function DataTableV2<TData>({
                                   }
                                 }}
                                 tabIndex={0}>
-                                <div className="font-medium">
+                                <span className="font-medium">
                                   {flexRender(header.column.columnDef.header, header.getContext())}
-                                </div>
+                                </span>
                                 {{
                                   asc: (
                                     <ChevronUpIcon
@@ -524,8 +524,8 @@ export function DataTableV2<TData>({
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-6 w-6 ml-1">
-                                    <MoreHorizontalIcon size={14} />
+                                    className="h-6 w-6">
+                                    <ChevronsUpDown size={14} />
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
