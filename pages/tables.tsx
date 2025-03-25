@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { DataTableV2 } from "@/components/table/data-table-v2";
+import { DataTableV2 } from "@/components/table-v2/data-table-v2";
 import { Badge } from "@/components/ui/badge";
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -92,9 +92,7 @@ function Table() {
           {row.getValue("status")}
         </Badge>
       ),
-      meta: {
-        type: "enum",
-      },
+      meta: { type: "enum" },
       enableHiding: true,
     },
     {
@@ -108,9 +106,7 @@ function Table() {
         }).format(amount);
         return formatted;
       },
-      meta: {
-        type: "number",
-      },
+      meta: { type: "number" },
       enableHiding: true,
     },
   ];
