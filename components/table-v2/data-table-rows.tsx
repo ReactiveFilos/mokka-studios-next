@@ -6,7 +6,9 @@ import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 import { ColumnDef, flexRender } from "@tanstack/react-table";
 
-export default function DataTableRows<TData>({ table, columns }: TableProps<TData> & { columns: ColumnDef<TData>[] }) {
+export default function DataTableRows<TData>({
+  table, columns
+}: TableProps<TData> & { columns: ColumnDef<TData>[] }) {
   return (
     <TableBody>
       {table.getRowModel().rows?.length ? (

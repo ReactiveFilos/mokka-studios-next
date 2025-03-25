@@ -115,24 +115,12 @@ function Table() {
     },
   ];
 
-  const handleRowDelete = (rows: Item[]) => {
-    console.log("Deleting rows:", rows);
-    setData(prev => prev.filter(item => !rows.some(row => row.id === item.id)));
-  };
-
-  const handleAddItem = () => {
-    console.log("Add item clicked");
-    // Implementation would go here
-  };
-
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-2xl font-bold mb-4">Users Table Example</h1>
       <DataTableV2
         data={data}
         columns={columns}
-        onRowDelete={handleRowDelete}
-        onAddItem={handleAddItem}
       />
     </div>
   );
