@@ -24,25 +24,6 @@ import {
 export default function DataTableHeaders<TData>(
   { table, columns, columnOrder }: TableProps<TData> & { columns: ColumnDef<TData>[], columnOrder: string[] }) {
 
-  const reorderColumn = (
-    movingColumnId: string,
-    direction: "left" | "right"
-  ) => {
-    const currentIndex = columnOrder.indexOf(movingColumnId);
-    const newIndex = direction === "left"
-      ? Math.max(currentIndex - 1, 2) // Don't move left of select column
-      : Math.min(currentIndex + 1, columnOrder.length - 1);
-
-    // No change if already at edge
-    if (currentIndex === newIndex) return;
-
-    // Create a new order with the column moved
-    const newOrder = [...columnOrder];
-    newOrder.splice(currentIndex, 1);
-    newOrder.splice(newIndex, 0, movingColumnId);
-
-    table.setColumnOrder(newOrder);
-  };
 
   return (
     <TableHeader className="bg-muted/50">
@@ -103,14 +84,14 @@ export default function DataTableHeaders<TData>(
                           </DropdownMenuGroup>
                         )}
                         <DropdownMenuItem
-                          onClick={() => reorderColumn(header.column.id, "left")}
-                          disabled={columnOrder.indexOf(header.column.id) <= 2}>
+                          onClick={() => { }}
+                          disabled={false}>
                           <MoveLeftIcon className="mr-2 h-4 w-4" />
                           Move left
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => reorderColumn(header.column.id, "right")}
-                          disabled={columnOrder.indexOf(header.column.id) >= columnOrder.length - 1}>
+                          onClick={() => { }}
+                          disabled={false}>
                           <MoveRightIcon className="mr-2 h-4 w-4" />
                           Move right
                         </DropdownMenuItem>
