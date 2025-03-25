@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { TableProps } from "./types";
 
@@ -66,21 +66,12 @@ declare module "@tanstack/react-table" {
   }
 }
 
-// Define types for your filter functions
-type FilterFn<TData, TValue> = (
-  row: Row<TData>,
-  id: string,
-  filterValue: any
-) => boolean;
-
 export interface DataTableProps<TData> {
   data: TData[];
   columns: ColumnDef<TData, any>[];
   onRowDelete?: (rows: TData[]) => void;
   onAddItem?: () => void;
   showAddButton?: boolean;
-  searchPlaceholder?: string;
-  searchColumnId?: string;
 }
 
 export function DataTableV2<TData>({
@@ -90,16 +81,20 @@ export function DataTableV2<TData>({
   onAddItem,
   showAddButton = true,
 }: DataTableProps<TData>) {
-  const id = useId();
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnOrder, setColumnOrder] = useState<string[]>(
+    userColumns.map((column) => column.id)
+  );
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   // Prepare columns with selection checkbox
   const columns = useMemo(() => {
@@ -149,23 +144,28 @@ export function DataTableV2<TData>({
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     onSortingChange: setSorting,
+
+    getPaginationRowModel: getPaginationRowModel(),
+
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
+
     onPaginationChange: setPagination,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
-      pagination,
+      columnOrder,
       rowSelection,
+      pagination,
     },
     enableRowSelection: true,
     enableMultiRowSelection: true,
+    onColumnOrderChange: setColumnOrder,
   });
 
   // Handle row deletion
@@ -242,7 +242,7 @@ export function DataTableV2<TData>({
       {/* Table */}
       <div className="bg-background overflow-hidden rounded-md border">
         <Table className="table-fixed">
-          <DataTableHeaders table={table} columns={columns} />
+          <DataTableHeaders table={table} columns={columns} columnOrder={columnOrder} />
           <DataTableRows table={table} columns={columns} />
         </Table>
       </div>

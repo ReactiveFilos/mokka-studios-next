@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 
 import { TableProps } from "./types";
 
-import { cn } from "@/lib/utils";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu, DropdownMenuContent,
@@ -15,11 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import {
-  ColumnDef,
-  flexRender,
-  Row
-} from "@tanstack/react-table";
+import { ColumnDef, flexRender, Row } from "@tanstack/react-table";
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -91,14 +85,10 @@ const filterFunctions = {
       return value < Number(filterValue);
     },
   },
-  enum: (row: Row<any>, id: string, filterValue: unknown[] | null) => {
-    if (!filterValue?.length) return true;
-    const value = row.getValue(id);
-    return filterValue.includes(value);
-  },
 };
 
-export default function DataTableHeaders<TData>({ table, columns }: TableProps<TData> & { columns: ColumnDef<TData>[] }) {
+export default function DataTableHeaders<TData>(
+  { table, columns, columnOrder }: TableProps<TData> & { columns: ColumnDef<TData>[], columnOrder: string[] }) {
   const [columnFiltersState, setColumnFiltersState] = useState<ColumnFilterState[]>([]);
 
   // Handle column filter changes
@@ -140,7 +130,6 @@ export default function DataTableHeaders<TData>({ table, columns }: TableProps<T
 
     // Determine type based on column definition or data sample
     if (column.meta?.type === "number") return "equals";
-    if (column.meta?.type === "enum") return "equals";
     return "contains"; // Default for text
   };
 
@@ -156,9 +145,7 @@ export default function DataTableHeaders<TData>({ table, columns }: TableProps<T
       const type = column.meta?.type || "text";
 
       // Fix: Use type assertion or check for valid types
-      if (type === "enum") {
-        filterFn = filterFunctions.enum;
-      } else if (type === "number") {
+      if (type === "number") {
         // Access number filter functions
         filterFn = filterFunctions.number[filter.operator as keyof typeof filterFunctions.number] ||
           filterFunctions.number.equals;
@@ -177,6 +164,39 @@ export default function DataTableHeaders<TData>({ table, columns }: TableProps<T
 
     table.setColumnFilters(filters);
   }, [columnFiltersState, columns]);
+
+  // Implement the move column functions
+  const moveColumn = (columnId: string, direction: "left" | "right") => {
+    const currentIndex = columnOrder.indexOf(columnId);
+    const newIndex = direction === "left"
+      ? Math.max(currentIndex - 1, 2) // Don't move left of select column
+      : Math.min(currentIndex + 1, columnOrder.length - 1);
+
+    // No change if already at edge
+    if (currentIndex === newIndex) return;
+
+    // Create a new order with the column moved
+    const newOrder = [...columnOrder];
+    newOrder.splice(currentIndex, 1);
+    newOrder.splice(newIndex, 0, columnId);
+
+    table.setColumnOrder(newOrder);
+  };
+
+  const reorderColumn = (
+    movingColumnId: string,
+    targetColumnId: string,
+  ) => {
+    const newColumnOrder = [...columnOrder];
+    newColumnOrder.splice(
+      newColumnOrder.indexOf(targetColumnId),
+      0,
+      newColumnOrder.splice(newColumnOrder.indexOf(movingColumnId), 1)[0],
+    );
+    console.log(newColumnOrder);
+
+    table.setColumnOrder(newColumnOrder);
+  };
 
   return (
     <TableHeader className="bg-muted/50">
@@ -197,57 +217,18 @@ export default function DataTableHeaders<TData>({ table, columns }: TableProps<T
           ))}
 
           {/* Rest of cells with borders between them */}
-          {headerGroup.headers.slice(2).map((header, index) => (
+          {headerGroup.headers.slice(2).map((header) => (
             <TableHead
               key={header.id}
               style={{ width: `${header.getSize()}px` }}
-              className={cn(
-                "py-2",
-                index < headerGroup.headers.length - 3 && "border-l border-r border-border"
-              )}>
+              className="py-2 border-l border-r border-border">
               {header.isPlaceholder ? null : (
                 <div className="space-y-2">
-                  {/* Column Header with Sort */}
+                  {/* Column Header */}
                   <div className="flex items-center justify-between">
-                    {header.column.getCanSort() ? (
-                      <div
-                        className={cn(
-                          "flex h-full cursor-pointer items-center gap-2 select-none",
-                        )}
-                        onClick={header.column.getToggleSortingHandler()}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            header.column.getToggleSortingHandler()?.(e);
-                          }
-                        }}
-                        tabIndex={0}>
-                        <span className="font-medium">
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                        </span>
-                        {{
-                          asc: (
-                            <ChevronUpIcon
-                              className="shrink-0 opacity-60"
-                              size={16}
-                              aria-hidden="true"
-                            />
-                          ),
-                          desc: (
-                            <ChevronDownIcon
-                              className="shrink-0 opacity-60"
-                              size={16}
-                              aria-hidden="true"
-                            />
-                          ),
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                    ) : (
-                      <div className="font-medium">
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                      </div>
-                    )}
-
+                    <span className="font-medium ml-0.5">
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                    </span>
                     {/* Column Actions Menu */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -274,11 +255,15 @@ export default function DataTableHeaders<TData>({ table, columns }: TableProps<T
                             <DropdownMenuSeparator />
                           </DropdownMenuGroup>
                         )}
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => reorderColumn(header.column.id, "left")}
+                          disabled={columnOrder.indexOf(header.column.id) <= 2}>
                           <MoveLeftIcon className="mr-2 h-4 w-4" />
                           Move left
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => reorderColumn(header.column.id, "right")}
+                          disabled={columnOrder.indexOf(header.column.id) >= columnOrder.length - 1}>
                           <MoveRightIcon className="mr-2 h-4 w-4" />
                           Move right
                         </DropdownMenuItem>
@@ -288,21 +273,20 @@ export default function DataTableHeaders<TData>({ table, columns }: TableProps<T
 
                   {/* Column Filter */}
                   {header.column.getCanFilter() && (
-                    <div className="flex items-center">
+                    <div className="flex items-center justify-between gap-2">
                       <Input
                         className="h-8 text-xs"
                         placeholder={"Filter..."}
                         value={(columnFiltersState.find(f => f.id === header.column.id)?.value || "") as string}
                         onChange={(e) => updateColumnFilter(header.column.id, e.target.value)}
                       />
-
                       {/* Filter Operator Selection */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8">
+                            className="h-6 w-6">
                             <FilterIcon size={14} />
                           </Button>
                         </DropdownMenuTrigger>

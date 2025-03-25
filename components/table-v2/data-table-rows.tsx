@@ -1,5 +1,7 @@
 import { TableProps } from "./types";
 
+import { cn } from "@/lib/utils";
+
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 import { ColumnDef, flexRender } from "@tanstack/react-table";
@@ -12,9 +14,9 @@ export default function DataTableRows<TData>({ table, columns }: TableProps<TDat
           <TableRow
             key={row.id}
             data-state={row.getIsSelected() && "selected"}
-            className="*:border-border hover:bg-transparent [&>:not(:last-child)]:border-r">
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
+            className="hover:bg-transparent">
+            {row.getVisibleCells().map((cell, index) => (
+              <TableCell key={cell.id} className={cn(index > 0 && "border-r")}>
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </TableCell>
             ))}
