@@ -8,6 +8,7 @@ export default function Tables() {
   return (
     <AppDiv width100 flexLayout="flexColumnStartLeft" gap="1.75rem">
       <Component485 />
+      <Component480 />
       <Table />
     </AppDiv>
   );
@@ -21,7 +22,9 @@ import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
+import Component480 from "@/components/comp-480";
 import { DataTableV2 } from "@/components/table-v2/data-table-v2";
+import { enumFilterFn } from "@/components/table-v2/types";
 import { Badge } from "@/components/ui/badge";
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -93,6 +96,7 @@ function Table() {
         </Badge>
       ),
       meta: { type: "enum" },
+      filterFn: enumFilterFn,
       enableHiding: true,
     },
     {

@@ -1,3 +1,5 @@
+import { TableProps } from "./types";
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Pagination, PaginationContent, PaginationItem } from "@/components/ui/pagination";
@@ -9,7 +11,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Table } from "@tanstack/react-table";
 import {
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -17,13 +18,9 @@ import {
   ChevronRightIcon
 } from "lucide-react";
 
-interface DataTablePaginationProps<TData> {
-  table: Table<TData>
-}
-
 export function DataTablePagination<TData>({
   table,
-}: DataTablePaginationProps<TData>) {
+}: TableProps<TData>) {
   const id = "data-table-pagination";
   return (
     <div className="flex items-center justify-between gap-8">
