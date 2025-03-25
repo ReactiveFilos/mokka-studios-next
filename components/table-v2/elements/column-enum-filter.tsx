@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 
 import { Filter as FilterIcon } from "lucide-react";
 
-export default function EnumColumnFilter<TData>({
+export default function ColumnEnumFilter<TData>({
   table, columnId
 }: TableProps<TData> & { columnId: string }) {
   const id = `enum-column-filter-${columnId.charAt(0).toUpperCase() + columnId.slice(1)}`;

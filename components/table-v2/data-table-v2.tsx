@@ -16,8 +16,8 @@ import { Table } from "@/components/ui/table";
 import DataTableHeaders from "./data-table-headers";
 import { DataTablePagination } from "./data-table-pagination";
 import DataTableRows from "./data-table-rows";
-import EnumColumnFilter from "./elements/enum-column-filter";
-import ToggleColumnVisibility from "./elements/toggle-column-visibility";
+import ColumnEnumFilter from "./elements/column-enum-filter";
+import ColumnVisibilityToggle from "./elements/column-visibility-toggle";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -35,14 +35,6 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 import { EditIcon, EllipsisIcon, TrashIcon } from "lucide-react";
-
-// Extend the ColumnMeta interface
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData, TValue> {
-    type?: "text" | "number" | "enum" | string;
-    // Add any other custom metadata properties you're using
-  }
-}
 
 export interface DataTableProps<TData> {
   data: TData[];
@@ -131,7 +123,7 @@ export function DataTableV2<TData>({
       sorting,
       columnFilters,
       columnVisibility,
-      columnOrder,
+      columnOrder: ["actions", "select", ...columnOrder],
       rowSelection,
       pagination,
     },
@@ -146,8 +138,8 @@ export function DataTableV2<TData>({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3">
           {/* Status filter - show for any enum column */}
-          <EnumColumnFilter table={table} columnId="status" />
-          <ToggleColumnVisibility table={table} />
+          <ColumnEnumFilter table={table} columnId="status" />
+          <ColumnVisibilityToggle table={table} />
         </div>
 
         {/* Delete + Add buttons */}

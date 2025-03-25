@@ -62,6 +62,7 @@ function Table() {
 
   const columns: ColumnDef<Item>[] = [
     {
+      id: "name",
       header: "Name",
       accessorKey: "name",
       cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
@@ -69,12 +70,14 @@ function Table() {
       enableHiding: true,
     },
     {
+      id: "email",
       header: "Email",
       accessorKey: "email",
       enableSorting: true,
       enableHiding: true,
     },
     {
+      id: "location",
       header: "Location",
       accessorKey: "location",
       cell: ({ row }) => (
@@ -85,6 +88,7 @@ function Table() {
       enableHiding: true,
     },
     {
+      id: "status",
       header: "Status",
       accessorKey: "status",
       cell: ({ row }) => (
@@ -100,6 +104,7 @@ function Table() {
       enableHiding: true,
     },
     {
+      id: "balance",
       header: "Balance",
       accessorKey: "balance",
       cell: ({ row }) => {

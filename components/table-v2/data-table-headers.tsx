@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import InputColumnFilter from "./elements/input-column-filter";
+import ColumnInputFilter from "./elements/column-input-filter";
 import { ColumnDef, flexRender } from "@tanstack/react-table";
 import {
   ChevronDownIcon,
@@ -75,6 +75,7 @@ export default function DataTableHeaders<TData>(
                     <span className="font-medium ml-0.5">
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     </span>
+
                     {/* Column Actions Menu */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -117,9 +118,9 @@ export default function DataTableHeaders<TData>(
                     </DropdownMenu>
                   </div>
 
-                  {/* Column Filter */}
+                  {/* Column Input Filter */}
                   {header.column.getCanFilter() &&
-                    <InputColumnFilter
+                    <ColumnInputFilter
                       table={table}
                       columns={columns}
                       header={header}
