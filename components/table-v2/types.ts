@@ -1,8 +1,8 @@
-import { FilterFn, Table } from "@tanstack/react-table";
+import { FilterFn, RowData, Table } from "@tanstack/react-table";
 
 // Extend the ColumnMeta interface
 declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData, TValue> {
+  interface ColumnMeta<TData extends RowData, TValue> {
     type?: metaType;
   }
 }
@@ -27,8 +27,8 @@ export const enumFilterFn: FilterFn<any> = (row, columnId, filterValue: string[]
   return filterValue.includes(value);
 };
 
-export const filterFunctions = {
-  string: {
+const filterFunctions = {
+  text: {
     contains: (fieldValue: string, filterValue: string) => fieldValue.includes(filterValue),
     equals: (fieldValue: string, filterValue: string) => fieldValue === filterValue,
     startsWith: (fieldValue: string, filterValue: string) => fieldValue.startsWith(filterValue),
@@ -52,17 +52,17 @@ import {
   Filter as FilterIcon,
 } from "lucide-react";
 
-const operatorOptions = {
+export const filterOptions = {
   text: [
-    { value: "contains", label: "Contains", icon: FilterIcon },
-    { value: "equals", label: "Equals", icon: Equal },
-    { value: "startsWith", label: "Starts with", icon: ArrowRightIcon },
-    { value: "endsWith", label: "Ends with", icon: ArrowLeftIcon },
+    { value: "contains", label: "Contains", icon: FilterIcon, function: filterFunctions.text.contains },
+    { value: "equals", label: "Equals", icon: Equal, function: filterFunctions.text.equals },
+    { value: "startsWith", label: "Starts with", icon: ArrowRightIcon, function: filterFunctions.text.startsWith },
+    { value: "endsWith", label: "Ends with", icon: ArrowLeftIcon, function: filterFunctions.text.endsWith },
   ],
   number: [
-    { value: "equals", label: "Equal to", icon: Equal },
-    { value: "notEquals", label: "Not equal to", icon: EqualNot },
-    { value: "gt", label: "Greater than", icon: ChevronRightIcon },
-    { value: "lt", label: "Less than", icon: ChevronLeftIcon },
+    { value: "equals", label: "Equal to", icon: Equal, function: filterFunctions.number.equals },
+    { value: "notEquals", label: "Not equal to", icon: EqualNot, function: filterFunctions.number.notEquals },
+    { value: "gt", label: "Greater than", icon: ChevronRightIcon, function: filterFunctions.number.greaterThan },
+    { value: "lt", label: "Less than", icon: ChevronLeftIcon, function: filterFunctions.number.lessThan },
   ],
 };

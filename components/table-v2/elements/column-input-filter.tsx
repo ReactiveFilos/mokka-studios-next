@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 
-import { ColumnDef, Header } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { Filter as FilterIcon } from "lucide-react";
 
 export default function ColumnInputFilter<TData>({
-  table, columns, header
-}: TableProps<TData> & { columns: ColumnDef<TData>[], header: Header<TData, unknown> }) {
+  table, columns, column
+}: TableProps<TData> & { columns: ColumnDef<TData>[], column: ColumnDef<TData> }) {
+  // const [selectedFilter, setSelectedFilter] = useMemo(() => filterOptions[column.meta.type], [column.meta.type]);
 
 
   return (

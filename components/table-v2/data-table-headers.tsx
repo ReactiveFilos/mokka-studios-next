@@ -12,18 +12,17 @@ import {
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import ColumnInputFilter from "./elements/column-input-filter";
+import ColumnMoveButtons from "./elements/column-move-buttons";
 import { ColumnDef, flexRender } from "@tanstack/react-table";
 import {
   ChevronDownIcon,
   ChevronsUpDown,
-  ChevronUpIcon,
-  MoveLeftIcon,
-  MoveRightIcon,
+  ChevronUpIcon
 } from "lucide-react";
 
-export default function DataTableHeaders<TData>(
-  { table, columns, columnOrder }: TableProps<TData> & { columns: ColumnDef<TData>[], columnOrder: string[] }) {
-
+export default function DataTableHeaders<TData>({
+  table, columns, columnOrder
+}: TableProps<TData> & { columns: ColumnDef<TData>[], columnOrder: string[] }) {
 
   return (
     <TableHeader className="bg-muted/50">
@@ -83,18 +82,11 @@ export default function DataTableHeaders<TData>(
                             <DropdownMenuSeparator />
                           </DropdownMenuGroup>
                         )}
-                        <DropdownMenuItem
-                          onClick={() => { }}
-                          disabled={false}>
-                          <MoveLeftIcon className="mr-2 h-4 w-4" />
-                          Move left
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => { }}
-                          disabled={false}>
-                          <MoveRightIcon className="mr-2 h-4 w-4" />
-                          Move right
-                        </DropdownMenuItem>
+                        <ColumnMoveButtons
+                          column={header.column}
+                          columnOrder={columnOrder}
+                          setColumnOrder={table.setColumnOrder}
+                        />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -104,7 +96,7 @@ export default function DataTableHeaders<TData>(
                     <ColumnInputFilter
                       table={table}
                       columns={columns}
-                      header={header}
+                      column={header.column}
                     />
                   }
                 </div>

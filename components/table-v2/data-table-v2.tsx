@@ -110,26 +110,25 @@ export function DataTableV2<TData>({
     getFilteredRowModel: getFilteredRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    onSortingChange: setSorting,
-
     getPaginationRowModel: getPaginationRowModel(),
 
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-
-    onPaginationChange: setPagination,
+    onColumnOrderChange: setColumnOrder,
+    onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: setPagination,
+
+    enableRowSelection: true,
+    enableMultiRowSelection: true,
     state: {
-      sorting,
+      columnOrder: ["actions", "select", ...columnOrder],
       columnFilters,
       columnVisibility,
-      columnOrder: ["actions", "select", ...columnOrder],
+      sorting,
       rowSelection,
       pagination,
     },
-    enableRowSelection: true,
-    enableMultiRowSelection: true,
-    onColumnOrderChange: setColumnOrder,
   });
 
   return (
