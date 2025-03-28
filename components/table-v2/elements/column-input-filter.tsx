@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 
-import { FilterOption, filterOptions } from "../types";
+import { FilterOption, filterOptions, TableProps } from "../types";
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 
+import ColumnEnumFilter from "./column-enum-filter";
 import { Column } from "@tanstack/react-table";
 
 export default function ColumnInputFilter<TData>({
-  column
-}: { column: Column<TData> }) {
+  table, column
+}: TableProps<TData> & { column: Column<TData> }) {
   const metaType = column.columnDef.meta?.type || "text";
 
   // TODO: Add support for enum and date filters
@@ -18,6 +19,14 @@ export default function ColumnInputFilter<TData>({
   switch (metaType) {
     case "number":
       return <NumberColumnFilter column={column} />;
+    case "enum":
+      return (
+        <ColumnEnumFilter
+          table={table}
+          columnId={column.id}
+          view="in-column-header"
+        />
+      );
     case "text":
     default:
       return <TextColumnFilter column={column} />;
@@ -136,7 +145,6 @@ function NumberColumnFilter<TData>({ column }: { column: Column<TData> }) {
               placeholder="Max"
               value={secondValue}
               onChange={(e) => setSecondValue(e.target.value)}
-
             />
           </>
         )}

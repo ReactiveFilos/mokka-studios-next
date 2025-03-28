@@ -5,14 +5,17 @@ import { TableProps } from "../types";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 import { Filter as FilterIcon } from "lucide-react";
 
+type ViewOptions = "above-table" | "in-column-header";
+
 {/* Above-table Button Filter */ }
 export default function ColumnEnumFilter<TData>({
-  table, columnId
-}: TableProps<TData> & { columnId: string }) {
+  table, columnId, view
+}: TableProps<TData> & { columnId: string, view: ViewOptions }) {
   const filterId = `enum-filter-${columnId}`;
 
   // Get unique values
@@ -53,41 +56,79 @@ export default function ColumnEnumFilter<TData>({
     table.getColumn(columnId)?.setFilterValue(newFilterValue.length ? newFilterValue : undefined);
   };
 
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline">
-          <FilterIcon className="-ms-1 opacity-60" size={16} aria-hidden="true" />
-          {columnId.charAt(0).toUpperCase() + columnId.slice(1)}
-          {selectedValues.length > 0 && (
-            <span className="bg-background text-muted-foreground/70 -me-1 inline-flex h-5 max-h-full items-center rounded border px-1 font-[inherit] text-[0.625rem] font-medium">
-              {selectedValues.length}
-            </span>
-          )}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
-        <DropdownMenuLabel>Filters</DropdownMenuLabel>
-        <div className="space-y-4 py-1.5 px-2">
-          {uniqueValues.map((value, i) => (
-            <div key={value as string} className="flex items-center gap-3">
-              <Checkbox
-                id={`${filterId}-${i}`}
-                checked={selectedValues.includes(value as string)}
-                onCheckedChange={(checked: boolean) => handleValueChange(!!checked, value as string)}
-              />
-              <Label
-                htmlFor={`${filterId}-${i}`}
-                className="flex grow justify-between gap-3 font-normal">
-                {value as string}{" "}
-                <span className="text-muted-foreground ms-3 text-xs">
-                  {valueCounts.get(value)}
-                </span>
-              </Label>
-            </div>
-          ))}
-        </div>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+  if (view === "above-table") {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">
+            <FilterIcon className="-ms-1 opacity-60" size={16} aria-hidden="true" />
+            {columnId.charAt(0).toUpperCase() + columnId.slice(1)}
+            {selectedValues.length > 0 && (
+              <span className="bg-background text-muted-foreground/70 -me-1 inline-flex h-5 max-h-full items-center rounded border px-1 font-[inherit] text-[0.625rem] font-medium">
+                {selectedValues.length}
+              </span>
+            )}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuLabel>Filters</DropdownMenuLabel>
+          <div className="space-y-4 py-1.5 px-2.5">
+            {uniqueValues.map((value, i) => (
+              <div key={value as string} className="flex items-center gap-3">
+                <Checkbox
+                  id={`${filterId}-${i}`}
+                  checked={selectedValues.includes(value as string)}
+                  onCheckedChange={(checked: boolean) => handleValueChange(!!checked, value as string)}
+                />
+                <Label
+                  htmlFor={`${filterId}-${i}`}
+                  className="flex grow justify-between gap-3 font-normal">
+                  {value as string}{" "}
+                  <span className="text-muted-foreground ms-3 text-xs">
+                    {valueCounts.get(value)}
+                  </span>
+                </Label>
+              </div>
+            ))}
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  } else if (view === "in-column-header") {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Input
+            className="h-8 text-xs text-left"
+            readOnly
+            value={selectedValues.length ?
+              `${selectedValues.length} selected` :
+              "Select options"}
+          />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          <DropdownMenuLabel>Filters</DropdownMenuLabel>
+          <div className="space-y-4 py-1.5 px-2.5">
+            {uniqueValues.map((value, i) => (
+              <div key={value as string} className="flex items-center gap-3">
+                <Checkbox
+                  id={`${filterId}-${i}`}
+                  checked={selectedValues.includes(value as string)}
+                  onCheckedChange={(checked: boolean) => handleValueChange(!!checked, value as string)}
+                />
+                <Label
+                  htmlFor={`${filterId}-${i}`}
+                  className="flex grow justify-between gap-3 font-normal">
+                  {value as string}{" "}
+                  <span className="text-muted-foreground ms-3 text-xs">
+                    {valueCounts.get(value)}
+                  </span>
+                </Label>
+              </div>
+            ))}
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
 }

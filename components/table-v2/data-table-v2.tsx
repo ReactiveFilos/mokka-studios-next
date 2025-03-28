@@ -151,7 +151,7 @@ export function DataTableV2<TData>({
         <div className="flex flex-wrap items-center gap-3">
           {/* Status filter - show for any enum column */}
           <ColumnVisibilityToggle table={table} />
-          <ColumnEnumFilter table={table} columnId="status" />
+          <ColumnEnumFilter table={table} columnId="status" view="above-table" />
         </div>
 
         {/* Delete + Add buttons */}

@@ -94,6 +94,7 @@ export default function DataTableHeaders<TData>({
                   {/* Column Input Filter */}
                   {header.column.getCanFilter() &&
                     <ColumnInputFilter
+                      table={table}
                       column={header.column}
                     />
                   }
