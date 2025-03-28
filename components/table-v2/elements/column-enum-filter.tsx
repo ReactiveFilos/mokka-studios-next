@@ -9,10 +9,11 @@ import { Label } from "@/components/ui/label";
 
 import { Filter as FilterIcon } from "lucide-react";
 
+{/* Above-table Button Filter */ }
 export default function ColumnEnumFilter<TData>({
   table, columnId
 }: TableProps<TData> & { columnId: string }) {
-  const id = `enum-column-filter-${columnId.charAt(0).toUpperCase() + columnId.slice(1)}`;
+  const filterId = `enum-filter-${columnId}`;
 
   // Get unique values
   const uniqueValues = useMemo(() => {
@@ -71,12 +72,12 @@ export default function ColumnEnumFilter<TData>({
           {uniqueValues.map((value, i) => (
             <div key={value as string} className="flex items-center gap-2">
               <Checkbox
-                id={`${id}-${i}`}
+                id={`${filterId}-${i}`}
                 checked={selectedValues.includes(value as string)}
                 onCheckedChange={(checked: boolean) => handleValueChange(!!checked, value as string)}
               />
               <Label
-                htmlFor={`${id}-${i}`}
+                htmlFor={`${filterId}-${i}`}
                 className="flex grow justify-between gap-2 font-normal">
                 {value as string}{" "}
                 <span className="text-muted-foreground ms-2 text-xs">

@@ -11,6 +11,7 @@ import {
 
 import { Columns3Icon } from "lucide-react";
 
+{/* Above-table Visibility Toggle */ }
 export default function ColumnVisibilityToggle<TData>({
   table
 }: TableProps<TData>) {

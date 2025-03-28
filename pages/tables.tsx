@@ -65,26 +65,23 @@ function Table() {
       header: "Name",
       accessorKey: "name",
       cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
-      enableSorting: true,
-      enableHiding: true,
+      meta: { type: "text" },
     },
     {
       id: "email",
       header: "Email",
       accessorKey: "email",
-      enableSorting: true,
-      enableHiding: true,
+      size: 220,
+      meta: { type: "text" },
     },
     {
       id: "location",
       header: "Location",
       accessorKey: "location",
       cell: ({ row }) => (
-        <div>
-          <span className="text-lg leading-none">{row.original.flag}</span> {row.getValue("location")}
-        </div>
+        <p><span className="text-lg leading-none">{row.original.flag}</span> {row.getValue("location")}</p>
       ),
-      enableHiding: true,
+      meta: { type: "text" },
     },
     {
       id: "status",
@@ -100,7 +97,6 @@ function Table() {
       ),
       meta: { type: "enum" },
       filterFn: enumFilterFn,
-      enableHiding: true,
     },
     {
       id: "balance",
@@ -115,7 +111,6 @@ function Table() {
         return formatted;
       },
       meta: { type: "number" },
-      enableHiding: true,
     },
   ];
 

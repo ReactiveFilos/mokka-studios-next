@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 
+import { enhancedFilterFn } from "./types";
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -38,7 +40,7 @@ import { EditIcon, EllipsisIcon, TrashIcon } from "lucide-react";
 
 export interface DataTableProps<TData> {
   data: TData[];
-  columns: ColumnDef<TData, any>[];
+  columns: ColumnDef<TData>[];
 }
 
 export function DataTableV2<TData>({
@@ -59,6 +61,13 @@ export function DataTableV2<TData>({
     pageIndex: 0,
     pageSize: 10,
   });
+
+  const columnsWithFilters: ColumnDef<TData>[] = useMemo(() => {
+    return userColumns && userColumns.map(column => ({
+      ...column,
+      filterFn: enhancedFilterFn,
+    }));
+  }, [userColumns]);
 
   // Prepare columns with selection checkbox
   const columns = useMemo(() => {
@@ -93,13 +102,13 @@ export function DataTableV2<TData>({
             aria-label="Select row"
           />
         ),
-        size: 26,
+        size: 28,
         enableSorting: false,
         enableHiding: false,
       },
-      ...userColumns,
+      ...columnsWithFilters,
     ];
-  }, [userColumns]);
+  }, [columnsWithFilters]);
 
   // Table instance
   const table = useReactTable({

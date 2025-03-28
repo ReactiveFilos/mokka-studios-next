@@ -31,7 +31,7 @@ export default function DataTableHeaders<TData>({
           key={headerGroup.id}
           className="hover:bg-transparent">
 
-          {/* First two cells (actions and select) without borders */}
+          {/* First two cells (actions and select) without borders and dropdown options */}
           {headerGroup.headers.slice(0, 2).map((header) => (
             <TableHead
               key={header.id}
@@ -42,7 +42,7 @@ export default function DataTableHeaders<TData>({
             </TableHead>
           ))}
 
-          {/* Rest of cells with borders between them */}
+          {/* Rest of cells with borders and dropdown options */}
           {headerGroup.headers.slice(2).map((header) => (
             <TableHead
               key={header.id}
@@ -94,8 +94,6 @@ export default function DataTableHeaders<TData>({
                   {/* Column Input Filter */}
                   {header.column.getCanFilter() &&
                     <ColumnInputFilter
-                      table={table}
-                      columns={columns}
                       column={header.column}
                     />
                   }

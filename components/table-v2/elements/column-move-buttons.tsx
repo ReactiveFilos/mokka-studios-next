@@ -1,8 +1,6 @@
-import { useCallback } from "react";
-
 import { DropdownMenuGroup, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
-import { ColumnDef } from "@tanstack/react-table";
+import { Column } from "@tanstack/react-table";
 import { MoveLeftIcon, MoveRightIcon } from "lucide-react";
 
 export default function ColumnMoveButtons<TData>({
@@ -10,12 +8,12 @@ export default function ColumnMoveButtons<TData>({
   columnOrder,
   setColumnOrder,
 }: {
-  column: ColumnDef<TData>;
+  column: Column<TData>;
   columnOrder: string[];
   setColumnOrder: (order: string[]) => void;
 }) {
 
-  const moveColumn = useCallback((direction: "left" | "right") => {
+  const moveColumn = (direction: "left" | "right") => {
     const index = columnOrder.indexOf(column.id);
     const newOrder = [...columnOrder];
 
@@ -26,21 +24,18 @@ export default function ColumnMoveButtons<TData>({
     }
 
     setColumnOrder(newOrder);
-  }, [columnOrder, column.id, setColumnOrder]);
-
-  const handleMoveLeft = useCallback(() => moveColumn("left"), [moveColumn]);
-  const handleMoveRight = useCallback(() => moveColumn("right"), [moveColumn]);
+  };
 
   return (
     <DropdownMenuGroup>
       <DropdownMenuItem
-        onClick={handleMoveLeft}
+        onClick={() => moveColumn("left")}
         disabled={columnOrder.indexOf(column.id) === 0}>
         <MoveLeftIcon className="mr-2 h-4 w-4" />
         Move left
       </DropdownMenuItem>
       <DropdownMenuItem
-        onClick={handleMoveRight}
+        onClick={() => moveColumn("right")}
         disabled={columnOrder.indexOf(column.id) === columnOrder.length - 1}>
         <MoveRightIcon className="mr-2 h-4 w-4" />
         Move right
