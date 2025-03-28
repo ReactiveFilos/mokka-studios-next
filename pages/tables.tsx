@@ -81,6 +81,7 @@ function Table() {
       cell: ({ row }) => (
         <p><span className="text-lg leading-none">{row.original.flag}</span> {row.getValue("location")}</p>
       ),
+      size: 180,
       meta: { type: "text" },
     },
     {

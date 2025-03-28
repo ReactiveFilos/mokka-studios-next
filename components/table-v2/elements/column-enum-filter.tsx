@@ -70,7 +70,7 @@ export default function ColumnEnumFilter<TData>({
         <DropdownMenuLabel>Filters</DropdownMenuLabel>
         <div className="space-y-4 py-1.5 px-2">
           {uniqueValues.map((value, i) => (
-            <div key={value as string} className="flex items-center gap-2">
+            <div key={value as string} className="flex items-center gap-3">
               <Checkbox
                 id={`${filterId}-${i}`}
                 checked={selectedValues.includes(value as string)}
@@ -78,9 +78,9 @@ export default function ColumnEnumFilter<TData>({
               />
               <Label
                 htmlFor={`${filterId}-${i}`}
-                className="flex grow justify-between gap-2 font-normal">
+                className="flex grow justify-between gap-3 font-normal">
                 {value as string}{" "}
-                <span className="text-muted-foreground ms-2 text-xs">
+                <span className="text-muted-foreground ms-3 text-xs">
                   {valueCounts.get(value)}
                 </span>
               </Label>

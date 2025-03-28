@@ -29,7 +29,7 @@ export const enumFilterFn: FilterFn<any> = (row, columnId, filterValue: string[]
 
 type FilterFunction = (cellValue: any, filterValue: any) => boolean;
 
-interface FilterOption {
+export interface FilterOption {
   label: string;
   value: string;
   icon: React.ComponentType<any>;

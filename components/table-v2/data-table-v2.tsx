@@ -65,7 +65,7 @@ export function DataTableV2<TData>({
   const columnsWithFilters: ColumnDef<TData>[] = useMemo(() => {
     return userColumns && userColumns.map(column => ({
       ...column,
-      filterFn: enhancedFilterFn,
+      filterFn: column.filterFn ? column.filterFn : enhancedFilterFn,
     }));
   }, [userColumns]);
 
@@ -76,7 +76,9 @@ export function DataTableV2<TData>({
         id: "actions",
         header: () => <span className="sr-only">Actions</span>,
         cell: ({ row }) => <RowActions row={row} />,
-        size: 30,
+        size: 32,
+        minSize: 32,
+        maxSize: 32,
         enableSorting: false,
         enableHiding: false,
       },
@@ -102,7 +104,9 @@ export function DataTableV2<TData>({
             aria-label="Select row"
           />
         ),
-        size: 28,
+        size: 34,
+        minSize: 34,
+        maxSize: 34,
         enableSorting: false,
         enableHiding: false,
       },
@@ -146,8 +150,8 @@ export function DataTableV2<TData>({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3">
           {/* Status filter - show for any enum column */}
-          <ColumnEnumFilter table={table} columnId="status" />
           <ColumnVisibilityToggle table={table} />
+          <ColumnEnumFilter table={table} columnId="status" />
         </div>
 
         {/* Delete + Add buttons */}
@@ -170,7 +174,10 @@ function RowActions<TData>({ row }: { row: Row<TData> }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 flex-shrink-0">
           <EllipsisIcon size={16} />
           <span className="sr-only">Open menu</span>
         </Button>

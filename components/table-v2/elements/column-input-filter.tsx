@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { filterOptions } from "../types";
+import { FilterOption, filterOptions } from "../types";
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -26,7 +26,7 @@ export default function ColumnInputFilter<TData>({
 
 function TextColumnFilter<TData>({ column }: { column: Column<TData> }) {
   const filters = filterOptions["text"];
-  const [selectedFilter, setSelectedFilter] = useState(filters[0]);
+  const [selectedFilter, setSelectedFilter] = useState<FilterOption>(filters[0]);
   const [value, setValue] = useState<string>("");
 
   // Apply the filter when value or filter operator changes
@@ -59,36 +59,18 @@ function TextColumnFilter<TData>({ column }: { column: Column<TData> }) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
-      {/* Filter Operator Selection */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6">
-            <selectedFilter.icon size={14} />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-[180px]">
-          <DropdownMenuLabel>Filter options</DropdownMenuLabel>
-          {filters.map((filter) => (
-            <DropdownMenuItem
-              key={filter.value}
-              onClick={() => setSelectedFilter(filter)}
-              className="flex items-center gap-2 cursor-pointer">
-              <filter.icon size={14} className="mr-2" />
-              {filter.label}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <BaseFilterOptions
+        selectedFilter={selectedFilter}
+        filterOptions={filters}
+        onSelect={setSelectedFilter}
+      />
     </div>
   );
 }
 
 function NumberColumnFilter<TData>({ column }: { column: Column<TData> }) {
   const filters = filterOptions["number"];
-  const [selectedFilter, setSelectedFilter] = useState(filters[0]);
+  const [selectedFilter, setSelectedFilter] = useState<FilterOption>(filters[0]);
   const [value, setValue] = useState<string>("");
   const [secondValue, setSecondValue] = useState<string>("");
 
@@ -140,18 +122,17 @@ function NumberColumnFilter<TData>({ column }: { column: Column<TData> }) {
       <div className="flex items-center gap-1 flex-1">
         <Input
           type="number"
-          className="h-8 text-xs"
+          className="h-8 text-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none no-spin-buttons"
           placeholder={selectedFilter.value === "between" ? "Min" : "Value"}
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
-
         {showSecondInput && (
           <>
             <span className="text-xs">to</span>
             <Input
               type="number"
-              className="h-8 text-xs"
+              className="h-8 text-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none no-spin-buttons"
               placeholder="Max"
               value={secondValue}
               onChange={(e) => setSecondValue(e.target.value)}
@@ -160,30 +141,47 @@ function NumberColumnFilter<TData>({ column }: { column: Column<TData> }) {
           </>
         )}
       </div>
-
-      {/* Filter Operator Selection */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 flex-shrink-0">
-            <selectedFilter.icon size={14} />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-[180px]">
-          <DropdownMenuLabel>Filter options</DropdownMenuLabel>
-          {filters.map((filter) => (
-            <DropdownMenuItem
-              key={filter.value}
-              onClick={() => setSelectedFilter(filter)}
-              className="flex items-center gap-2 cursor-pointer">
-              <filter.icon size={14} className="mr-2" />
-              {filter.label}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <BaseFilterOptions
+        selectedFilter={selectedFilter}
+        filterOptions={filters}
+        onSelect={setSelectedFilter}
+      />
     </div>
+  );
+}
+
+{/* Filter Operator Selection */ }
+function BaseFilterOptions({
+  selectedFilter,
+  filterOptions,
+  onSelect,
+}: {
+  selectedFilter: FilterOption;
+  filterOptions: FilterOption[];
+  onSelect: (filter: FilterOption) => void;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 flex-shrink-0">
+          <selectedFilter.icon size={14} />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-[160px]">
+        <DropdownMenuLabel>Filter options</DropdownMenuLabel>
+        {filterOptions.map((filter) => (
+          <DropdownMenuItem
+            key={filter.value}
+            onClick={() => onSelect(filter)}
+            className="flex items-center gap-2 cursor-pointer">
+            <filter.icon size={14} className="mr-2" />
+            {filter.label}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

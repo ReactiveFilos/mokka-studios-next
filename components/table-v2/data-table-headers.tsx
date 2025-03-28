@@ -35,8 +35,8 @@ export default function DataTableHeaders<TData>({
           {headerGroup.headers.slice(0, 2).map((header) => (
             <TableHead
               key={header.id}
-              style={{ width: `${header.getSize()}px` }}
-              className="py-2">
+              style={{ width: `${header.getSize()}px`, minWidth: `${header.getSize()}px`, maxWidth: `${header.getSize()}px` }}
+              className="py-2 flex-shrink-0">
               {/* No border for action columns */}
               {flexRender(header.column.columnDef.header, header.getContext())}
             </TableHead>
@@ -66,7 +66,7 @@ export default function DataTableHeaders<TData>({
                           <ChevronsUpDown size={14} />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
+                      <DropdownMenuContent align="end" className="min-w-[170px]">
                         {header.column.getCanSort() && (
                           <DropdownMenuGroup>
                             <DropdownMenuItem
